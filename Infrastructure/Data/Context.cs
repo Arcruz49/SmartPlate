@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SmartPlate.Domain.Entities;
 
-namespace SmartPlate.Data
+namespace SmartPlate.Infrastructure.Data
 {
     public class Context : DbContext
     {
@@ -10,6 +10,6 @@ namespace SmartPlate.Data
         {
         }
 
-        public DbSet<Users> users { get; set; }
+        public DbSet<User> users { get; set; }
     }
 }

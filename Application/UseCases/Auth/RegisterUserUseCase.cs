@@ -4,7 +4,7 @@ using SmartPlate.Application.DTOs.Request;
 using SmartPlate.Application.DTOs.Responses;
 using SmartPlate.Application.Interfaces;
 using SmartPlate.Application.Security;
-using SmartPlate.Data;
+using SmartPlate.Infrastructure.Data;
 using SmartPlate.Domain.Entities;
 using SmartPlate.Domain.ValueObjects;
 
@@ -13,14 +13,14 @@ namespace SmartPlate.Application.UseCases;
 public class RegisterUserUseCase : IRegisterUserUseCase{
 
     private readonly Context _db;
-    private readonly PasswordHasher<Users> _passwordHasher;
+    private readonly PasswordHasher<User> _passwordHasher;
     private readonly JwtTokenGenerator _tokenGenerator;
 
 
     public RegisterUserUseCase(Context db, JwtTokenGenerator jwtTokenGenerator)
     {
         _db = db;
-        _passwordHasher = new PasswordHasher<Users>();
+        _passwordHasher = new PasswordHasher<User>();
         _tokenGenerator = jwtTokenGenerator;
     }
     public async Task<UserDto> ExecuteAsync(RegisterUserRequest request)
@@ -31,7 +31,7 @@ public class RegisterUserUseCase : IRegisterUserUseCase{
         if (_db.users.AsNoTracking().Any(u => u.email == email.Value))
             throw new InvalidOperationException("Email já cadastrado.");
 
-        Users user = new Users()
+        User user = new User()
         {
             id = Guid.NewGuid(),
             name = request.name,

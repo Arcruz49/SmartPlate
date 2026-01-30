@@ -4,7 +4,7 @@ using SmartPlate.Application.DTOs.Request;
 using SmartPlate.Application.DTOs.Responses;
 using SmartPlate.Application.Interfaces;
 using SmartPlate.Application.Security;
-using SmartPlate.Data;
+using SmartPlate.Infrastructure.Data;
 using SmartPlate.Domain.Entities;
 using SmartPlate.Domain.ValueObjects;
 
@@ -13,14 +13,14 @@ namespace SmartPlate.Application.UseCases;
 public class LoginUseCase : ILoginUseCase{
 
     private readonly Context _db;
-    private readonly PasswordHasher<Users> _passwordHasher;
+    private readonly PasswordHasher<User> _passwordHasher;
     private readonly JwtTokenGenerator _tokenGenerator;
 
 
     public LoginUseCase(Context db, JwtTokenGenerator jwtTokenGenerator)
     {
         _db = db;
-        _passwordHasher = new PasswordHasher<Users>();
+        _passwordHasher = new PasswordHasher<User>();
         _tokenGenerator = jwtTokenGenerator;
     }
     public async Task<UserDto> ExecuteAsync(LoginRequest request)

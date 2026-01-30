@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SmartPlate.Domain.Entities;
 
-public class Users
+public class User
 {
     [Key]
     public Guid id { get; set; }

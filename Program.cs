@@ -5,7 +5,7 @@ using System.Text;
 using SmartPlate.Application.Interfaces;
 using SmartPlate.Application.UseCases;
 using SmartPlate.Application.Security;
-using SmartPlate.Data;
+using SmartPlate.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
