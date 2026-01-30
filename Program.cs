@@ -50,6 +50,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
 builder.Services.AddScoped<ILoginUseCase, LoginUseCase>();
 builder.Services.AddScoped<IUserDataCreateCase, UserDataCreateCase>();
+builder.Services.AddScoped<IUserDataByUserIdCase, UserDataByUserIdCase>();
 builder.Services.AddScoped<JwtTokenGenerator>();
 
 builder.Services.AddControllers()

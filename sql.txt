@@ -68,3 +68,23 @@ CREATE TABLE user_data (
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP
 );
+
+CREATE TABLE user_data_insights (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    user_data_id UUID NOT NULL,
+    CONSTRAINT fk_user_data
+        FOREIGN KEY (user_data_id)
+        REFERENCES user_data(id)
+        ON DELETE CASCADE,
+
+    target_calories        NUMERIC(8,2),
+    protein_target_g       NUMERIC(8,2), 
+    carbs_target_g         NUMERIC(8,2), 
+    fat_target_g           NUMERIC(8,2), 
+
+    sleep_hours_target     NUMERIC(4,2),
+
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP
+);

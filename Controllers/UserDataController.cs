@@ -11,9 +11,11 @@ namespace SmartPlate.Controllers;
 public class UserDataController : ControllerBase
 {
     private readonly IUserDataCreateCase _userDataCreate;
-    public UserDataController(IUserDataCreateCase userDataCreate)
+    private readonly IUserDataByUserIdCase _userDataByUserIdCase;
+    public UserDataController(IUserDataCreateCase userDataCreate, IUserDataByUserIdCase userDataByUserIdCase)
     {
         _userDataCreate = userDataCreate;
+        _userDataByUserIdCase = userDataByUserIdCase;
     }
 
     [HttpPost("userdata")]
@@ -39,6 +41,20 @@ public class UserDataController : ControllerBase
         {
             return BadRequest(new { success = false, message = ex.Message });
         }
+    }
+
+    [HttpGet("userdata")]
+    [Authorize]
+    public async Task<IActionResult> GetUserData()
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
+
+        if (userIdClaim is null) return Unauthorized();
+
+        var userId = Guid.Parse(userIdClaim.Value);
+
+        var data = await _userDataByUserIdCase.ExecuteAsync(userId);
+        return Ok(data);
     }
 
     
