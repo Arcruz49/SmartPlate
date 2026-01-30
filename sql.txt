@@ -5,3 +5,66 @@ CREATE TABLE users
     email VARCHAR(255) UNIQUE,
     password VARCHAR(255)
 );
+
+CREATE TYPE biological_sex AS ENUM (
+    'male',
+    'female'
+);
+
+CREATE TYPE training_type AS ENUM (
+    'strength',
+    'cardio',
+    'sports',
+    'mixed'
+);
+
+CREATE TYPE training_intensity AS ENUM (
+    'low',
+    'moderate',
+    'high'
+);
+
+CREATE TYPE daily_activity_level AS ENUM (
+    'sedentary',
+    'light',
+    'moderate',
+    'active',
+    'very_active'
+);
+
+CREATE TYPE user_goal AS ENUM (
+    'maintain',
+    'gain_muscle',
+    'lose_fat',
+    'performance'
+);
+
+
+CREATE TABLE user_data (
+    id UUID PRIMARY KEY,
+
+    user_id UUID NOT NULL,
+    CONSTRAINT fk_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    weight_kg NUMERIC(5,2) NOT NULL,
+    height_cm NUMERIC(5,2) NOT NULL,
+    age INT NOT NULL,
+    biological_sex biological_sex NOT NULL,
+
+    workouts_per_week INT NOT NULL,
+    training_type training_type NOT NULL,
+    training_intensity training_intensity NOT NULL,
+    daily_activity_level daily_activity_level NOT NULL,
+
+    user_goal user_goal NOT NULL,
+
+    sleep_quality INT CHECK (sleep_quality BETWEEN 1 AND 5),
+    stress_level INT CHECK (stress_level BETWEEN 1 AND 5),
+    routine_consistency INT CHECK (routine_consistency BETWEEN 1 AND 5),
+
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP
+);
