@@ -13,11 +13,14 @@ public class UserDataController : ControllerBase
     private readonly IUserDataCreateCase _userDataCreate;
     private readonly IUserDataByUserIdCase _userDataByUserIdCase;
     private readonly IUserDataInsightsCreateCase _userDataInsightsCreateCase;
-    public UserDataController(IUserDataCreateCase userDataCreate, IUserDataByUserIdCase userDataByUserIdCase, IUserDataInsightsCreateCase userDataInsightsCreateCase)
+    private readonly IUserDataInsightsByUserIdCase _userDataInsightsByUserIdCase;
+    public UserDataController(IUserDataCreateCase userDataCreate, IUserDataByUserIdCase userDataByUserIdCase, IUserDataInsightsCreateCase userDataInsightsCreateCase,
+    IUserDataInsightsByUserIdCase userDataInsightsByUserIdCase)
     {
         _userDataCreate = userDataCreate;
         _userDataByUserIdCase = userDataByUserIdCase;
         _userDataInsightsCreateCase = userDataInsightsCreateCase;
+        _userDataInsightsByUserIdCase = userDataInsightsByUserIdCase;
     }
 
     [HttpPost("userdata")]
@@ -82,5 +85,19 @@ public class UserDataController : ControllerBase
         {
             return BadRequest(new { success = false, message = ex.Message });
         }
+    }
+
+    [HttpGet("userdatainsights")]
+    [Authorize]
+    public async Task<IActionResult> GetUserDataInsights()
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
+
+        if (userIdClaim is null) return Unauthorized();
+
+        var userId = Guid.Parse(userIdClaim.Value);
+
+        var data = await _userDataInsightsByUserIdCase.ExecuteAsync(userId);
+        return Ok(data);
     }
 }
