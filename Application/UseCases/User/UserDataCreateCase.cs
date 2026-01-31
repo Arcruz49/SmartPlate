@@ -3,43 +3,55 @@ using SmartPlate.Application.DTOs.Request;
 using SmartPlate.Application.DTOs.Responses;
 using SmartPlate.Application.Interfaces;
 using SmartPlate.Infrastructure.Data;
-using SmartPlate.Domain.Entities;
 
 namespace SmartPlate.Application.UseCases;
 
-public class UserDataCreateCase : IUserDataCreateCase{
-
+public class UserDataCreateCase : IUserDataCreateCase
+{
     private readonly Context _db;
-    
+
     public UserDataCreateCase(Context db)
     {
         _db = db;
     }
+
     public async Task<UserDataResponse> ExecuteAsync(Guid userId, UserDataRequest request)
     {
-        var user = await _db.Users.AsNoTracking().Where(a => a.Id == userId).AnyAsync();
+        var userExists = await _db.Users
+            .AsNoTracking()
+            .AnyAsync(u => u.Id == userId);
 
-        if(!user) throw new InvalidOperationException("Usuário não encontrado.");
+        if (!userExists)
+            throw new InvalidOperationException("Usuário não encontrado.");
 
-        var userData = new UserData
+        var userData = await _db.UserData
+            .FirstOrDefaultAsync(x => x.UserId == userId);
+
+        if (userData == null)
         {
-            Id = Guid.NewGuid(),
-            UserId = userId,
-            WeightKg = request.WeightKg,
-            HeightCm = request.HeightCm,
-            Age = request.Age,
-            BiologicalSex = request.BiologicalSex,
-            WorkoutsPerWeek = request.WorkoutsPerWeek,
-            TrainingIntensity = request.TrainingIntensity,
-            TrainingType = request.TrainingType,
-            DailyActivityLevel = request.DailyActivityLevel,
-            UserGoal = request.Goal,
-            SleepQuality = request.SleepQuality,
-            StressLevel = request.StressLevel,
-            RoutineConsistency = request.RoutineConsistency
-        };
+            userData = new Domain.Entities.UserData
+            {
+                Id = Guid.NewGuid(),
+                UserId = userId
+            };
 
-        _db.UserData.Add(userData);
+            _db.UserData.Add(userData);
+        }
+
+        userData.WeightKg = request.WeightKg;
+        userData.HeightCm = request.HeightCm;
+        userData.Age = request.Age;
+        userData.BiologicalSex = request.BiologicalSex;
+        userData.WorkoutsPerWeek = request.WorkoutsPerWeek;
+        userData.TrainingIntensity = request.TrainingIntensity;
+        userData.TrainingType = request.TrainingType;
+        userData.DailyActivityLevel = request.DailyActivityLevel;
+        userData.UserGoal = request.Goal;
+        userData.SleepQuality = request.SleepQuality;
+        userData.StressLevel = request.StressLevel;
+        userData.RoutineConsistency = request.RoutineConsistency;
+        userData.UpdatedAt = DateTime.UtcNow;
+
         await _db.SaveChangesAsync();
 
         return new UserDataResponse(

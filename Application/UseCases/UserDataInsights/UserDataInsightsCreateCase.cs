@@ -5,19 +5,22 @@ using SmartPlate.Domain.Entities;
 using SmartPlate.Infrastructure.AI;
 using SmartPlate.Infrastructure.Data;
 
-
 namespace SmartPlate.Application.UseCases;
 
-public class UserDataInsightsCreateCase : IUserDataInsightsCreateCase{
-
+public class UserDataInsightsCreateCase : IUserDataInsightsCreateCase
+{
     private readonly Context _db;
     private readonly IAIInsightsPromptService _aiInsightsPromptService;
     private readonly IUserDataByUserIdCase _userDataByUserIdCase;
     private readonly IAIClient _aiClient;
     private readonly IParseGeminiUserInsightsCase _parseGeminiUserInsightsCase;
-    
-    public UserDataInsightsCreateCase(Context db, IAIInsightsPromptService aiInsightsPromptService, IUserDataByUserIdCase userDataByUserIdCase, IAIClient aiClient,
-     IParseGeminiUserInsightsCase parseGeminiUserInsightsCase)
+
+    public UserDataInsightsCreateCase(
+        Context db,
+        IAIInsightsPromptService aiInsightsPromptService,
+        IUserDataByUserIdCase userDataByUserIdCase,
+        IAIClient aiClient,
+        IParseGeminiUserInsightsCase parseGeminiUserInsightsCase)
     {
         _db = db;
         _aiInsightsPromptService = aiInsightsPromptService;
@@ -25,41 +28,53 @@ public class UserDataInsightsCreateCase : IUserDataInsightsCreateCase{
         _aiClient = aiClient;
         _parseGeminiUserInsightsCase = parseGeminiUserInsightsCase;
     }
+
     public async Task<UserDataInsightsResponse> ExecuteAsync(Guid userId)
     {
-        var user = await _db.Users.AsNoTracking().Where(a => a.Id == userId).AnyAsync();
+        var userExists = await _db.Users
+            .AsNoTracking()
+            .AnyAsync(u => u.Id == userId);
 
-        if(!user) throw new InvalidOperationException("Usuário não encontrado.");
+        if (!userExists)
+            throw new InvalidOperationException("Usuário não encontrado.");
 
-        var userData = await _userDataByUserIdCase.ExecuteAsync(userId) ?? throw new InvalidOperationException("Dados do usuário não encontrados.");
+        var userData = await _userDataByUserIdCase.ExecuteAsync(userId)
+            ?? throw new InvalidOperationException("Dados do usuário não encontrados.");
 
         var prompt = await _aiInsightsPromptService.ExecuteAsync(userData);
 
-        var result = await _aiClient.SendPromptAsync(prompt);
+        var aiRawResponse = await _aiClient.SendPromptAsync(prompt);
 
-        var nutritionInsight = await _parseGeminiUserInsightsCase.ExecuteAsync(result);
+        var nutritionInsight = await _parseGeminiUserInsightsCase.ExecuteAsync(aiRawResponse);
 
-        var userDataInsight = new UserDataInsights
+        var existingInsight = await _db.UserDataInsights
+            .FirstOrDefaultAsync(x => x.UserId == userId);
+
+        if (existingInsight == null)
         {
-            Id = Guid.NewGuid(),
-            UserId = userId,
-            TargetCalories = nutritionInsight.target_calories,
-            CarbsTargetG = nutritionInsight.carbs_target_g,
-            ProteinTargetG = nutritionInsight.protein_target_g,
-            FatTargetG = nutritionInsight.fat_target_g,
-            SleepHoursTarget = nutritionInsight.sleep_hours_target
-        };
+            existingInsight = new UserDataInsights
+            {
+                Id = Guid.NewGuid(),
+                UserId = userId
+            };
 
-        _db.UserDataInsights.Add(userDataInsight);
+            _db.UserDataInsights.Add(existingInsight);
+        }
+
+        existingInsight.TargetCalories   = nutritionInsight.target_calories;
+        existingInsight.ProteinTargetG   = nutritionInsight.protein_target_g;
+        existingInsight.CarbsTargetG     = nutritionInsight.carbs_target_g;
+        existingInsight.FatTargetG       = nutritionInsight.fat_target_g;
+        existingInsight.SleepHoursTarget = nutritionInsight.sleep_hours_target;
+
         await _db.SaveChangesAsync();
 
         return new UserDataInsightsResponse(
-            userDataInsight.TargetCalories ?? 0,
-            userDataInsight.ProteinTargetG ?? 0, 
-            userDataInsight.CarbsTargetG ?? 0, 
-            userDataInsight.FatTargetG ?? 0, 
-            userDataInsight.SleepHoursTarget ?? 0
+            existingInsight.TargetCalories ?? 0,
+            existingInsight.ProteinTargetG ?? 0,
+            existingInsight.CarbsTargetG ?? 0,
+            existingInsight.FatTargetG ?? 0,
+            existingInsight.SleepHoursTarget ?? 0
         );
-
     }
 }
