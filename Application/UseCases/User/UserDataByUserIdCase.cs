@@ -14,7 +14,7 @@ public class UserDataByUserIdCase : IUserDataByUserIdCase{
     }
     public async Task<UserDataResponse> ExecuteAsync(Guid userId)
     {
-        var userData = await _db.user_data.AsNoTracking().FirstOrDefaultAsync(a => a.UserId == userId);
+        var userData = await _db.UserData.AsNoTracking().FirstOrDefaultAsync(a => a.UserId == userId);
 
         if(userData == null) throw new InvalidOperationException("Usuário ainda não possui dados cadastrados.");
 

@@ -17,7 +17,7 @@ public class UserDataCreateCase : IUserDataCreateCase{
     }
     public async Task<UserDataResponse> ExecuteAsync(Guid userId, UserDataRequest request)
     {
-        var user = await _db.users.AsNoTracking().Where(a => a.Id == userId).AnyAsync();
+        var user = await _db.Users.AsNoTracking().Where(a => a.Id == userId).AnyAsync();
 
         if(!user) throw new InvalidOperationException("Usuário não encontrado.");
 
@@ -39,7 +39,7 @@ public class UserDataCreateCase : IUserDataCreateCase{
             RoutineConsistency = request.RoutineConsistency
         };
 
-        _db.user_data.Add(userData);
+        _db.UserData.Add(userData);
         await _db.SaveChangesAsync();
 
         return new UserDataResponse(

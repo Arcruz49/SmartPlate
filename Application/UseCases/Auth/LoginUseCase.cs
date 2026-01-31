@@ -28,7 +28,7 @@ public class LoginUseCase : ILoginUseCase{
         var email = new Email(request.Email);
         var password = new Password(request.Password);
 
-        var user = await _db.users.AsNoTracking().Where(a => a.Email.Equals(email.Value)).FirstOrDefaultAsync() ?? throw new InvalidOperationException("Email não registrado.");
+        var user = await _db.Users.AsNoTracking().Where(a => a.Email.Equals(email.Value)).FirstOrDefaultAsync() ?? throw new InvalidOperationException("Email não registrado.");
         
         var result = _passwordHasher.VerifyHashedPassword(user, user.Password, password.Value);
 

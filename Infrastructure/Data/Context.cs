@@ -11,8 +11,9 @@ public class Context : DbContext
     {
     }
 
-    public DbSet<User> users { get; set; } = null!;
-    public DbSet<UserData> user_data { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<UserData> UserData { get; set; } = null!;
+    public DbSet<UserDataInsights> UserDataInsights { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -21,6 +22,10 @@ public class Context : DbContext
         modelBuilder.HasPostgresEnum<TrainingIntensity>();
         modelBuilder.HasPostgresEnum<DailyActivityLevel>();
         modelBuilder.HasPostgresEnum<UserGoals>();
+
+        modelBuilder.Entity<User>().ToTable("users");
+        modelBuilder.Entity<UserData>().ToTable("user_data");
+        modelBuilder.Entity<UserDataInsights>().ToTable("user_data_insights");
 
         base.OnModelCreating(modelBuilder);
     }

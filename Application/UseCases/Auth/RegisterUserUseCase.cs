@@ -28,7 +28,7 @@ public class RegisterUserUseCase : IRegisterUserUseCase{
         var email = new Email(request.Email);
         var password = new Password(request.Password);
 
-        if (_db.users.AsNoTracking().Any(u => u.Email == email.Value))
+        if (_db.Users.AsNoTracking().Any(u => u.Email == email.Value))
             throw new InvalidOperationException("Email já cadastrado.");
 
         User user = new User()
@@ -40,7 +40,7 @@ public class RegisterUserUseCase : IRegisterUserUseCase{
 
         user.Password = _passwordHasher.HashPassword(user, password.Value);
 
-        _db.users.Add(user);
+        _db.Users.Add(user);
 
         await _db.SaveChangesAsync();
 
