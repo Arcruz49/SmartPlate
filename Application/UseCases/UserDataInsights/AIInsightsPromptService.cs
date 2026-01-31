@@ -6,13 +6,9 @@ using System.Text.Json;
 
 namespace SmartPlate.Application.UseCases;
 
-public class AIInsightsPromptService : IAIInsightsPromptService{
-
-    private readonly Context _db;
-    
-    public AIInsightsPromptService(Context db)
+public class AIInsightsPromptService : IAIInsightsPromptService{    
+    public AIInsightsPromptService()
     {
-        _db = db;
     }
     public async Task<string> ExecuteAsync(UserDataResponse userData)
     {
@@ -38,7 +34,7 @@ public class AIInsightsPromptService : IAIInsightsPromptService{
                 routine_consistency = userData.RoutineConsistency
             },
 
-            response_format = new ResponseFormat
+            response_format = new ResponseFormatUserData
             {
                 type = "json_object",
                 schema = new InsightSchemaUserData

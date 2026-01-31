@@ -7,20 +7,21 @@ using SmartPlate.Application.Interfaces;
 namespace SmartPlate.Controllers;
 
 [ApiController]
-[Route("user")]
-public class UserDataController : ControllerBase
+[Route("usermeals")]
+public class UserMealsController : ControllerBase
 {
-    private readonly IUserDataCreateCase _userDataCreate;
-    private readonly IUserDataByUserIdCase _userDataByUserIdCase;
-    public UserDataController(IUserDataCreateCase userDataCreate, IUserDataByUserIdCase userDataByUserIdCase)
+    private readonly IUserDataInsightsCreateCase _userDataInsightsCreateCase;
+    private readonly IUserDataInsightsByUserIdCase _userDataInsightsByUserIdCase;
+    public UserMealsController(IUserDataInsightsCreateCase userDataInsightsCreateCase,
+    IUserDataInsightsByUserIdCase userDataInsightsByUserIdCase)
     {
-        _userDataCreate = userDataCreate;
-        _userDataByUserIdCase = userDataByUserIdCase;
+        _userDataInsightsCreateCase = userDataInsightsCreateCase;
+        _userDataInsightsByUserIdCase = userDataInsightsByUserIdCase;
     }
 
-    [HttpPost("userdata")]
+    [HttpPost("userinsights")]
     [Authorize]
-    public async Task<IActionResult> RegisterUserData([FromBody] UserDataRequest request)
+    public async Task<IActionResult> RegisterUserDataInsights()
     {
         try
         {
@@ -30,7 +31,7 @@ public class UserDataController : ControllerBase
 
             var userId = Guid.Parse(userIdClaim.Value);
 
-            var data = await _userDataCreate.ExecuteAsync(userId, request);
+            var data = await _userDataInsightsCreateCase.ExecuteAsync(userId);
             return Ok(data);
         }
         catch (ArgumentException ex) // Value objects
@@ -43,9 +44,9 @@ public class UserDataController : ControllerBase
         }
     }
 
-    [HttpGet("userdata")]
+    [HttpGet("userinsights")]
     [Authorize]
-    public async Task<IActionResult> GetUserData()
+    public async Task<IActionResult> GetUserDataInsights()
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
 
@@ -53,8 +54,7 @@ public class UserDataController : ControllerBase
 
         var userId = Guid.Parse(userIdClaim.Value);
 
-        var data = await _userDataByUserIdCase.ExecuteAsync(userId);
+        var data = await _userDataInsightsByUserIdCase.ExecuteAsync(userId);
         return Ok(data);
     }
-
 }

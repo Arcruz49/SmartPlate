@@ -14,6 +14,7 @@ public class Context : DbContext
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<UserData> UserData { get; set; } = null!;
     public DbSet<UserDataInsights> UserDataInsights { get; set; } = null!;
+    public DbSet<UserMeal> UserMeal { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -26,6 +27,7 @@ public class Context : DbContext
         modelBuilder.Entity<User>().ToTable("users");
         modelBuilder.Entity<UserData>().ToTable("user_data");
         modelBuilder.Entity<UserDataInsights>().ToTable("user_data_insights");
+        modelBuilder.Entity<UserMeal>().ToTable("user_meals");
 
         base.OnModelCreating(modelBuilder);
     }

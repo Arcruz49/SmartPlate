@@ -88,3 +88,25 @@ CREATE TABLE user_data_insights (
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP
 );
+
+CREATE TABLE user_meals (
+    id UUID PRIMARY KEY,
+
+    user_id UUID NOT NULL,
+    CONSTRAINT fk_user_meals_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    meal_date DATE NOT NULL,          
+    meal_name VARCHAR(255),           
+    meal_time TIME,                   
+
+    calories NUMERIC(7,2) NOT NULL,
+    protein_g NUMERIC(6,2) NOT NULL,
+    carbs_g NUMERIC(6,2) NOT NULL,
+    fat_g NUMERIC(6,2) NOT NULL,
+
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP
+);
