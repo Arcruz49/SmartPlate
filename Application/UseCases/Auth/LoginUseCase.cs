@@ -25,17 +25,17 @@ public class LoginUseCase : ILoginUseCase{
     }
     public async Task<UserDto> ExecuteAsync(LoginRequest request)
     {
-        var email = new Email(request.email);
-        var password = new Password(request.password);
+        var email = new Email(request.Email);
+        var password = new Password(request.Password);
 
-        var user = await _db.users.AsNoTracking().Where(a => a.email.Equals(email.Value)).FirstOrDefaultAsync() ?? throw new InvalidOperationException("Email não registrado.");
+        var user = await _db.users.AsNoTracking().Where(a => a.Email.Equals(email.Value)).FirstOrDefaultAsync() ?? throw new InvalidOperationException("Email não registrado.");
         
-        var result = _passwordHasher.VerifyHashedPassword(user, user.password, password.Value);
+        var result = _passwordHasher.VerifyHashedPassword(user, user.Password, password.Value);
 
         if(result == PasswordVerificationResult.Failed) throw new InvalidOperationException("Senha incorreta");
 
-        var token = _tokenGenerator.GenerateToken(user.id.ToString(), user.name, user.email);
+        var token = _tokenGenerator.GenerateToken(user.Id.ToString(), user.Name, user.Email);
 
-        return new UserDto(user.name, user.email, token);
+        return new UserDto(user.Name, user.Email, token);
     }
 }

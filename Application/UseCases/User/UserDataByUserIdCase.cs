@@ -14,23 +14,23 @@ public class UserDataByUserIdCase : IUserDataByUserIdCase{
     }
     public async Task<UserDataResponse> ExecuteAsync(Guid userId)
     {
-        var userData = await _db.user_data.AsNoTracking().FirstOrDefaultAsync(a => a.user_id == userId);
+        var userData = await _db.user_data.AsNoTracking().FirstOrDefaultAsync(a => a.UserId == userId);
 
         if(userData == null) throw new InvalidOperationException("Usuário ainda não possui dados cadastrados.");
 
         return new UserDataResponse(
-            userData.weight_kg,
-            userData.height_cm,
-            userData.age,
-            userData.biological_sex,
-            userData.workouts_per_week,
-            userData.training_type,
-            userData.training_intensity,
-            userData.daily_activity_level,
-            userData.user_goal,
-            userData.sleep_quality,
-            userData.stress_level,
-            userData.routine_consistency
+            userData.WeightKg,
+            userData.HeightCm,
+            userData.Age,
+            userData.BiologicalSex,
+            userData.WorkoutsPerWeek,
+            userData.TrainingType,
+            userData.TrainingIntensity,
+            userData.DailyActivityLevel,
+            userData.UserGoal,
+            userData.SleepQuality,
+            userData.StressLevel,
+            userData.RoutineConsistency
         );
     }
 }

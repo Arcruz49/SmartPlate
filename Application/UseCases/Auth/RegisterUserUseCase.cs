@@ -25,28 +25,28 @@ public class RegisterUserUseCase : IRegisterUserUseCase{
     }
     public async Task<UserDto> ExecuteAsync(RegisterUserRequest request)
     {
-        var email = new Email(request.email);
-        var password = new Password(request.password);
+        var email = new Email(request.Email);
+        var password = new Password(request.Password);
 
-        if (_db.users.AsNoTracking().Any(u => u.email == email.Value))
+        if (_db.users.AsNoTracking().Any(u => u.Email == email.Value))
             throw new InvalidOperationException("Email já cadastrado.");
 
         User user = new User()
         {
-            id = Guid.NewGuid(),
-            name = request.name,
-            email = email.Value,
+            Id = Guid.NewGuid(),
+            Name = request.Name,
+            Email = email.Value,
         };
 
-        user.password = _passwordHasher.HashPassword(user, password.Value);
+        user.Password = _passwordHasher.HashPassword(user, password.Value);
 
         _db.users.Add(user);
 
         await _db.SaveChangesAsync();
 
-        var token = _tokenGenerator.GenerateToken(user.id.ToString(), user.name, user.email);
+        var token = _tokenGenerator.GenerateToken(user.Id.ToString(), user.Name, user.Email);
 
 
-        return new UserDto(user.name, user.email, token);
+        return new UserDto(user.Name, user.Email, token);
     }
 }

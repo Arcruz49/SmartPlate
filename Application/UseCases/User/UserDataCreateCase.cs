@@ -17,44 +17,44 @@ public class UserDataCreateCase : IUserDataCreateCase{
     }
     public async Task<UserDataResponse> ExecuteAsync(Guid userId, UserDataRequest request)
     {
-        var user = await _db.users.AsNoTracking().Where(a => a.id == userId).AnyAsync();
+        var user = await _db.users.AsNoTracking().Where(a => a.Id == userId).AnyAsync();
 
         if(!user) throw new InvalidOperationException("Usuário não encontrado.");
 
         var userData = new UserData
         {
-            id = Guid.NewGuid(),
-            user_id = userId,
-            weight_kg = request.WeightKg,
-            height_cm = request.HeightCm,
-            age = request.Age,
-            biological_sex = request.BiologicalSex,
-            workouts_per_week = request.WorkoutsPerWeek,
-            training_intensity = request.TrainingIntensity,
-            training_type = request.TrainingType,
-            daily_activity_level = request.DailyActivityLevel,
-            user_goal = request.Goal,
-            sleep_quality = request.SleepQuality,
-            stress_level = request.StressLevel,
-            routine_consistency = request.RoutineConsistency
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            WeightKg = request.WeightKg,
+            HeightCm = request.HeightCm,
+            Age = request.Age,
+            BiologicalSex = request.BiologicalSex,
+            WorkoutsPerWeek = request.WorkoutsPerWeek,
+            TrainingIntensity = request.TrainingIntensity,
+            TrainingType = request.TrainingType,
+            DailyActivityLevel = request.DailyActivityLevel,
+            UserGoal = request.Goal,
+            SleepQuality = request.SleepQuality,
+            StressLevel = request.StressLevel,
+            RoutineConsistency = request.RoutineConsistency
         };
 
         _db.user_data.Add(userData);
         await _db.SaveChangesAsync();
 
         return new UserDataResponse(
-            userData.weight_kg,
-            userData.height_cm,
-            userData.age,
-            userData.biological_sex,
-            userData.workouts_per_week,
-            userData.training_type,
-            userData.training_intensity,
-            userData.daily_activity_level,
-            userData.user_goal,
-            userData.sleep_quality,
-            userData.stress_level,
-            userData.routine_consistency
+            userData.WeightKg,
+            userData.HeightCm,
+            userData.Age,
+            userData.BiologicalSex,
+            userData.WorkoutsPerWeek,
+            userData.TrainingType,
+            userData.TrainingIntensity,
+            userData.DailyActivityLevel,
+            userData.UserGoal,
+            userData.SleepQuality,
+            userData.StressLevel,
+            userData.RoutineConsistency
         );
     }
 }
