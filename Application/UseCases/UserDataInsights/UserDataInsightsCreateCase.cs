@@ -1,63 +1,65 @@
 using Microsoft.EntityFrameworkCore;
-using SmartPlate.Application.DTOs.Request;
 using SmartPlate.Application.DTOs.Responses;
 using SmartPlate.Application.Interfaces;
-using SmartPlate.Infrastructure.Data;
 using SmartPlate.Domain.Entities;
-using SmartPlate.Application.DTOs.Prompts;
+using SmartPlate.Infrastructure.AI;
+using SmartPlate.Infrastructure.Data;
+
 
 namespace SmartPlate.Application.UseCases;
 
-public class UserDataInsightsCreateCase : IAIInsightsPromptService{
+public class UserDataInsightsCreateCase : IUserDataInsightsCreateCase{
 
     private readonly Context _db;
+    private readonly IAIInsightsPromptService _aiInsightsPromptService;
+    private readonly IUserDataByUserIdCase _userDataByUserIdCase;
+    private readonly IAIClient _aiClient;
+    private readonly IParseGeminiUserInsightsCase _parseGeminiUserInsightsCase;
     
-    public UserDataInsightsCreateCase(Context db, IUserDataByUserIdCase userDataByUserIdCase)
+    public UserDataInsightsCreateCase(Context db, IAIInsightsPromptService aiInsightsPromptService, IUserDataByUserIdCase userDataByUserIdCase, IAIClient aiClient,
+     IParseGeminiUserInsightsCase parseGeminiUserInsightsCase)
     {
         _db = db;
+        _aiInsightsPromptService = aiInsightsPromptService;
+        _userDataByUserIdCase = userDataByUserIdCase;
+        _aiClient = aiClient;
+        _parseGeminiUserInsightsCase = parseGeminiUserInsightsCase;
     }
-    public async Task<UserDataInsightPrompt> ExecuteAsync(UserDataRequest userData)
+    public async Task<UserDataInsightsResponse> ExecuteAsync(Guid userId)
     {
-        var prompt = new UserDataInsightPrompt
+        var user = await _db.Users.AsNoTracking().Where(a => a.Id == userId).AnyAsync();
+
+        if(!user) throw new InvalidOperationException("Usuário não encontrado.");
+
+        var userData = await _userDataByUserIdCase.ExecuteAsync(userId) ?? throw new InvalidOperationException("Dados do usuário não encontrados.");
+
+        var prompt = await _aiInsightsPromptService.ExecuteAsync(userData);
+
+        var result = await _aiClient.SendPromptAsync(prompt);
+
+        var nutritionInsight = await _parseGeminiUserInsightsCase.ExecuteAsync(result);
+
+        var userDataInsight = new UserDataInsights
         {
-            system_instruction = "You are an expert AI Sports Nutritionist. Calculate precise nutritional and recovery targets. " +
-                             "Methodology: Use Mifflin-St Jeor for BMR. Apply Activity Factor based on training and daily levels. " +
-                             "Goal Adjustment: Apply caloric deficit for 'lose_fat' or surplus for 'gain_muscle'.",
-
-            user_data = new UserDataInput
-            {
-                weight_kg = userData.WeightKg,
-                height_cm = userData.HeightCm,
-                age = userData.Age,
-                biological_sex = userData.BiologicalSex.ToString(),
-                workouts_per_week = userData.WorkoutsPerWeek,
-                training_type = userData.TrainingType.ToString(),
-                training_intensity = userData.TrainingIntensity.ToString(),
-                daily_activity_level = userData.DailyActivityLevel.ToString(),
-                user_goal = userData.Goal.ToString(),
-                sleep_quality = userData.SleepQuality,
-                stress_level = userData.StressLevel,
-                routine_consistency = userData.RoutineConsistency
-            
-            },
-
-            response_format = new ResponseFormat
-            {
-                type = "json_object",
-                schema = new InsightSchemaUserData
-                {
-                    target_calories = "number (daily total)",
-                    protein_target_g = "number (total grams)",
-                    carbs_target_g = "number (total grams)",
-                    fat_target_g = "number (total grams)",
-                    sleep_hours_target = "number (recommended hours)"
-                }
-            },
-
-            instruction = "Return ONLY the JSON object that strictly follows the keys defined in the schema above."
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            TargetCalories = nutritionInsight.target_calories,
+            CarbsTargetG = nutritionInsight.carbs_target_g,
+            ProteinTargetG = nutritionInsight.protein_target_g,
+            FatTargetG = nutritionInsight.fat_target_g,
+            SleepHoursTarget = nutritionInsight.sleep_hours_target
         };
 
-        return prompt;
+        _db.UserDataInsights.Add(userDataInsight);
+        await _db.SaveChangesAsync();
+
+        return new UserDataInsightsResponse(
+            userDataInsight.TargetCalories ?? 0,
+            userDataInsight.ProteinTargetG ?? 0, 
+            userDataInsight.CarbsTargetG ?? 0, 
+            userDataInsight.FatTargetG ?? 0, 
+            userDataInsight.SleepHoursTarget ?? 0
+        );
 
     }
 }

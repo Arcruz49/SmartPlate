@@ -9,9 +9,9 @@ public class UserDataInsights
     [Column("id")]
     public Guid Id { get; set; }
 
-    [Column("user_data_id")]
+    [Column("user_id")]
     [Required]
-    public Guid UserDataId { get; set; }
+    public Guid UserId { get; set; }
 
     [Column("target_calories", TypeName = "numeric(8,2)")]
     public decimal? TargetCalories { get; set; }
@@ -34,8 +34,8 @@ public class UserDataInsights
     [Column("updated_at")]
     public DateTime? UpdatedAt { get; set; }
 
-    [ForeignKey(nameof(UserDataId))]
-    public UserData UserData { get; set; } = null!;
+    [ForeignKey(nameof(UserId))]
+    public User User { get; set; } = null!;
 
 }
 

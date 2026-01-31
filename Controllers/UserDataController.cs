@@ -12,10 +12,12 @@ public class UserDataController : ControllerBase
 {
     private readonly IUserDataCreateCase _userDataCreate;
     private readonly IUserDataByUserIdCase _userDataByUserIdCase;
-    public UserDataController(IUserDataCreateCase userDataCreate, IUserDataByUserIdCase userDataByUserIdCase)
+    private readonly IUserDataInsightsCreateCase _userDataInsightsCreateCase;
+    public UserDataController(IUserDataCreateCase userDataCreate, IUserDataByUserIdCase userDataByUserIdCase, IUserDataInsightsCreateCase userDataInsightsCreateCase)
     {
         _userDataCreate = userDataCreate;
         _userDataByUserIdCase = userDataByUserIdCase;
+        _userDataInsightsCreateCase = userDataInsightsCreateCase;
     }
 
     [HttpPost("userdata")]
@@ -57,5 +59,28 @@ public class UserDataController : ControllerBase
         return Ok(data);
     }
 
-    
+    [HttpPost("userdatainsights")]
+    [Authorize]
+    public async Task<IActionResult> RegisterUserDataInsights()
+    {
+        try
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
+
+            if (userIdClaim is null) return Unauthorized();
+
+            var userId = Guid.Parse(userIdClaim.Value);
+
+            var data = await _userDataInsightsCreateCase.ExecuteAsync(userId);
+            return Ok(data);
+        }
+        catch (ArgumentException ex) // Value objects
+        {
+            return BadRequest(new { success = false, message = ex.Message });
+        }
+        catch (InvalidOperationException ex) // regras de negocio da user case
+        {
+            return BadRequest(new { success = false, message = ex.Message });
+        }
+    }
 }

@@ -6,9 +6,11 @@ using SmartPlate.Application.Interfaces;
 using SmartPlate.Application.UseCases;
 using SmartPlate.Application.Security;
 using SmartPlate.Infrastructure.Data;
+using SmartPlate.Infrastructure.AI;
 using System.Text.Json.Serialization;
 using Npgsql;
 using SmartPlate.Domain.Enums;
+using SmartPlate.Infrastructure.AI.Gemini;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,7 +53,14 @@ builder.Services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
 builder.Services.AddScoped<ILoginUseCase, LoginUseCase>();
 builder.Services.AddScoped<IUserDataCreateCase, UserDataCreateCase>();
 builder.Services.AddScoped<IUserDataByUserIdCase, UserDataByUserIdCase>();
+builder.Services.AddScoped<IAIInsightsPromptService, AIInsightsPromptService>();
+builder.Services.AddScoped<IUserDataInsightsCreateCase, UserDataInsightsCreateCase>();
+builder.Services.AddScoped<IParseGeminiUserInsightsCase, ParseGeminiUserInsightsCase>();
+builder.Services.AddHttpClient<IAIClient, AIClient>();
 builder.Services.AddScoped<JwtTokenGenerator>();
+builder.Services.Configure<GeminiOptions>(
+    builder.Configuration.GetSection("AI:Gemini")
+);
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

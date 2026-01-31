@@ -72,10 +72,10 @@ CREATE TABLE user_data (
 CREATE TABLE user_data_insights (
     id UUID PRIMARY KEY,
 
-    user_data_id UUID NOT NULL,
+    user_id UUID NOT NULL,
     CONSTRAINT fk_user_data
-        FOREIGN KEY (user_data_id)
-        REFERENCES user_data(id)
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
         ON DELETE CASCADE,
 
     target_calories        NUMERIC(8,2),
