@@ -14,6 +14,18 @@ using SmartPlate.Infrastructure.AI.Gemini;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontendPolicy", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
+});
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
@@ -78,6 +90,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -85,6 +98,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("FrontendPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

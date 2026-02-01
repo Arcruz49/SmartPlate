@@ -1,0 +1,167 @@
+ROTS API - SmartPlate
+===================
+
+AUTENTICAÇÃO (auth)
+-------------------
+
+POST /auth/register
+Request: 
+{
+  "name": "string",
+  "email": "string", 
+  "password": "string"
+}
+
+Response (200):
+{
+  "name": "string",
+  "email": "string",
+  "token": "string"
+}
+
+POST /auth/login
+Request:
+{
+  "email": "string",
+  "password": "string"
+}
+
+Response (200):
+{
+  "name": "string",
+  "email": "string", 
+  "token": "string"
+}
+
+DADOS DO USUÁRIO (user)
+-----------------------
+
+POST /user/userdata
+Headers: Authorization: Bearer <token>
+Request:
+{
+  "weightKg": decimal,
+  "heightCm": decimal,
+  "age": int,
+  "biologicalSex": enum,
+  "workoutsPerWeek": int,
+  "trainingType": enum,
+  "trainingIntensity": enum,
+  "dailyActivityLevel": enum,
+  "goal": enum,
+  "sleepQuality": int,
+  "stressLevel": int,
+  "routineConsistency": int
+}
+
+Response (200):
+{
+  "weightKg": decimal,
+  "heightCm": decimal,
+  "age": int,
+  "biologicalSex": enum,
+  "workoutsPerWeek": int,
+  "trainingType": enum,
+  "trainingIntensity": enum,
+  "dailyActivityLevel": enum,
+  "goal": enum,
+  "sleepQuality": int,
+  "stressLevel": int,
+  "routineConsistency": int
+}
+
+GET /user/userdata
+Headers: Authorization: Bearer <token>
+Response (200):
+{
+  "weightKg": decimal,
+  "heightCm": decimal,
+  "age": int,
+  "biologicalSex": enum,
+  "workoutsPerWeek": int,
+  "trainingType": enum,
+  "trainingIntensity": enum,
+  "dailyActivityLevel": enum,
+  "goal": enum,
+  "sleepQuality": int,
+  "stressLevel": int,
+  "routineConsistency": int
+}
+
+INSIGHTS DO USUÁRIO (userinsights)
+----------------------------------
+
+POST /userinsights/userinsights
+Headers: Authorization: Bearer <token>
+Request: (corpo vazio)
+Response (200):
+{
+  "target_calories": decimal,
+  "protein_target_g": decimal,
+  "carbs_target_g": decimal,
+  "fat_target_g": decimal,
+  "sleep_hours_target": decimal
+}
+
+GET /userinsights/userinsights
+Headers: Authorization: Bearer <token>
+Response (200):
+{
+  "target_calories": decimal,
+  "protein_target_g": decimal,
+  "carbs_target_g": decimal,
+  "fat_target_g": decimal,
+  "sleep_hours_target": decimal
+}
+
+REFEIÇÕES DO USUÁRIO (usermeals)
+---------------------------------
+
+POST /usermeals/usermeal
+Headers: Authorization: Bearer <token>
+Request:
+{
+  "mealName": "string",
+  "description": "string",
+  "imageBytes": "byte[]"
+}
+
+Response (200):
+{
+  "mealName": "string",
+  "description": "string",
+  "meal_date": "datetime",
+  "meal_time": "timespan",
+  "calories": decimal,
+  "protein_g": decimal,
+  "carbs_g": decimal,
+  "fat_g": decimal
+}
+
+GET /usermeals/usermeals?date=<datetime>
+Headers: Authorization: Bearer <token>
+Response (200):
+[
+  {
+    "mealName": "string",
+    "description": "string", 
+    "meal_date": "datetime",
+    "meal_time": "timespan",
+    "calories": decimal,
+    "protein_g": decimal,
+    "carbs_g": decimal,
+    "fat_g": decimal
+  }
+]
+
+ERROS COMUNS
+------------
+
+400 Bad Request:
+{
+  "success": false,
+  "message": "string"
+}
+
+401 Unauthorized:
+Retornado quando o token JWT não é fornecido ou é inválido
