@@ -41,6 +41,8 @@ public class UserMealsCreate : IUserMealsCreate{
         {
             Id = Guid.NewGuid(),
             UserId = userId,
+            MealName = request.MealName,
+            MealDescription = request.Description,
             MealDate = DateTime.Now.Date,
             MealTime = DateTime.Now.TimeOfDay,
             Calories = Convert.ToInt32(meal.calories),
@@ -53,6 +55,8 @@ public class UserMealsCreate : IUserMealsCreate{
         await _db.SaveChangesAsync();
 
         return new UserMealsResponse(
+            newUserMeal.MealName,
+            newUserMeal.MealDescription,
             newUserMeal.MealDate,
             newUserMeal.MealTime,
             newUserMeal.Calories,

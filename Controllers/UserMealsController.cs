@@ -11,9 +11,11 @@ namespace SmartPlate.Controllers;
 public class UserMealsController : ControllerBase
 {
     private readonly IUserMealsCreate _userMealCreate;
-    public UserMealsController(IUserMealsCreate userMealCreate)
+    private readonly IGetUserMealsByDay _getUserMealsByDay;
+    public UserMealsController(IUserMealsCreate userMealCreate, IGetUserMealsByDay getUserMealsByDay)
     {
         _userMealCreate = userMealCreate;
+        _getUserMealsByDay = getUserMealsByDay;
     }
 
     [HttpPost("usermeal")]
@@ -43,7 +45,7 @@ public class UserMealsController : ControllerBase
 
     [HttpGet("usermeals")]
     [Authorize]
-    public async Task<IActionResult> GetUserDataInsights()
+    public async Task<IActionResult> GetUserMealByDate([FromQuery] UserMealsDayRequest request)
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
 
@@ -51,6 +53,8 @@ public class UserMealsController : ControllerBase
 
         var userId = Guid.Parse(userIdClaim.Value);
 
-        return Ok();
+        var userMealsList = await _getUserMealsByDay.ExecuteAsync(userId, request);
+
+        return Ok(userMealsList);
     }
 }

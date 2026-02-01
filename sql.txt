@@ -97,9 +97,10 @@ CREATE TABLE user_meals (
         FOREIGN KEY (user_id)
         REFERENCES users(id)
         ON DELETE CASCADE,
-
+        
     meal_date DATE NOT NULL,          
-    meal_name VARCHAR(255),           
+    meal_name VARCHAR(255),  
+    meal_description VARCHAR(2000),          
     meal_time TIME,                   
 
     calories NUMERIC(7,2) NOT NULL,
@@ -110,3 +111,4 @@ CREATE TABLE user_meals (
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP
 );
+

@@ -15,6 +15,13 @@ public class UserMeal
     public Guid UserId { get; set; }
 
     [Required]
+    [Column("meal_name")]
+    public string MealName { get; set; } = string.Empty;
+    
+    [Column("meal_description")]
+    public string MealDescription { get; set; } = string.Empty;
+
+    [Required]
     [Column("meal_date", TypeName = "date")]
     public DateTime MealDate { get; set; }
     [Required]

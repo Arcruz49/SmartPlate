@@ -1,6 +1,8 @@
 namespace SmartPlate.Application.DTOs.Responses;
 
 public record UserMealsResponse(
+    string mealName,
+    string description,
     DateTime meal_date,
     TimeSpan meal_time,
     decimal calories,
