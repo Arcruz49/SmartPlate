@@ -73,6 +73,8 @@ builder.Services.AddScoped<IAMealPromptService, AIMealPromptService>();
 builder.Services.AddScoped<IParseGeminiUserMealCase, ParseGeminiUserMealCase>();
 builder.Services.AddScoped<IUserMealsCreate, UserMealsCreate>();
 builder.Services.AddScoped<IGetUserMealsByDay, GetUserMealsByDay>();
+builder.Services.AddScoped<IUserMealsDelete, UserMealDeleteCase>();
+builder.Services.AddScoped<IGetUserMealsById, GetUserMealsById>();
 builder.Services.AddHttpClient<IAIClient, AIClient>();
 builder.Services.AddScoped<JwtTokenGenerator>();
 builder.Services.Configure<GeminiOptions>(

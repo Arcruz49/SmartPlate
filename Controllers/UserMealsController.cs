@@ -12,10 +12,14 @@ public class UserMealsController : ControllerBase
 {
     private readonly IUserMealsCreate _userMealCreate;
     private readonly IGetUserMealsByDay _getUserMealsByDay;
-    public UserMealsController(IUserMealsCreate userMealCreate, IGetUserMealsByDay getUserMealsByDay)
+    private readonly IUserMealsDelete _userMealDelete;
+    private readonly IGetUserMealsById _getUserMealsById;
+    public UserMealsController(IUserMealsCreate userMealCreate, IGetUserMealsByDay getUserMealsByDay, IUserMealsDelete userMealsDelete, IGetUserMealsById getUserMealsById)
     {
         _userMealCreate = userMealCreate;
         _getUserMealsByDay = getUserMealsByDay;
+        _userMealDelete = userMealsDelete;
+        _getUserMealsById = getUserMealsById;
     }
 
     [HttpPost("usermeal")]
@@ -43,7 +47,7 @@ public class UserMealsController : ControllerBase
         }
     }
 
-    [HttpGet("usermeals")]
+    [HttpGet("usermeal")]
     [Authorize]
     public async Task<IActionResult> GetUserMealByDate([FromQuery] UserMealsDayRequest request)
     {
@@ -56,5 +60,45 @@ public class UserMealsController : ControllerBase
         var userMealsList = await _getUserMealsByDay.ExecuteAsync(userId, request);
 
         return Ok(userMealsList);
+    }
+    [HttpGet("usermealById")]
+    [Authorize]
+    public async Task<IActionResult> GetUserMealById([FromQuery] UserMealsIdRequest request)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
+
+        if (userIdClaim is null) return Unauthorized();
+
+        var userId = Guid.Parse(userIdClaim.Value);
+
+        var userMeal = await _getUserMealsById.ExecuteAsync(userId, request);
+
+        return Ok(userMeal);
+    }
+
+    [HttpDelete("usermeal")]
+    [Authorize]
+    public async Task<IActionResult> DeleteUserMeal([FromBody] UserMealsIdRequest request)
+    {
+        try
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
+
+            if (userIdClaim is null) return Unauthorized();
+
+            var userId = Guid.Parse(userIdClaim.Value);
+
+            await _userMealDelete.ExecuteAsync(request.MealId, userId);
+
+            return NoContent();
+        }
+        catch (ArgumentException ex) // Value objects
+        {
+            return BadRequest(new { success = false, message = ex.Message });
+        }
+        catch (InvalidOperationException ex) // regras de negocio da user case
+        {
+            return BadRequest(new { success = false, message = ex.Message });
+        }
     }
 }

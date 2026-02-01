@@ -128,6 +128,7 @@ Request:
 
 Response (200):
 {
+  "mealId": "guid",
   "mealName": "string",
   "description": "string",
   "meal_date": "datetime",
@@ -138,11 +139,12 @@ Response (200):
   "fat_g": decimal
 }
 
-GET /usermeals/usermeals?date=<datetime>
+GET /usermeals/usermeal?Date=<datetime>
 Headers: Authorization: Bearer <token>
 Response (200):
 [
   {
+    "mealId": "guid",
     "mealName": "string",
     "description": "string", 
     "meal_date": "datetime",
@@ -153,6 +155,31 @@ Response (200):
     "fat_g": decimal
   }
 ]
+
+GET /usermeals/usermealById?MealId=<guid>
+Headers: Authorization: Bearer <token>
+Response (200):
+{
+  "mealId": "guid",
+  "mealName": "string",
+  "description": "string", 
+  "meal_date": "datetime",
+  "meal_time": "timespan",
+  "calories": decimal,
+  "protein_g": decimal,
+  "carbs_g": decimal,
+  "fat_g": decimal
+}
+
+DELETE /usermeals/usermeal
+Headers: Authorization: Bearer <token>
+Request:
+{
+  "MealId": "guid"
+}
+
+Response (204):
+No Content
 
 ERROS COMUNS
 ------------

@@ -15,7 +15,6 @@ public class UserMealsCreate : IUserMealsCreate{
     private readonly IAIClient _aiClient;
     private readonly IParseGeminiUserMealCase _parseGeminiUserMeal;
 
-    
     public UserMealsCreate(Context db, IAMealPromptService mealPromptService, IAIClient aiClient, IParseGeminiUserMealCase parseGeminiUserMealCase)
     {
         _db = db;
@@ -55,6 +54,7 @@ public class UserMealsCreate : IUserMealsCreate{
         await _db.SaveChangesAsync();
 
         return new UserMealsResponse(
+            newUserMeal.Id,
             newUserMeal.MealName,
             newUserMeal.MealDescription,
             newUserMeal.MealDate,

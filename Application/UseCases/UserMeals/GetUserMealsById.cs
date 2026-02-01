@@ -8,15 +8,15 @@ using SmartPlate.Infrastructure.Data;
 
 namespace SmartPlate.Application.UseCases;
 
-public class GetUserMealsByDay : IGetUserMealsByDay{
+public class GetUserMealsById : IGetUserMealsById{
 
     private readonly Context _db;
 
-    public GetUserMealsByDay(Context db)
+    public GetUserMealsById(Context db)
     {
         _db = db;
     }
-    public async Task<List<UserMealsResponse>> ExecuteAsync(Guid userId, UserMealsDayRequest request)
+    public async Task<UserMealsResponse> ExecuteAsync(Guid userId, UserMealsIdRequest request)
     {
         var user = await _db.Users.AsNoTracking().Where(a => a.Id == userId).AnyAsync();
 
@@ -24,7 +24,7 @@ public class GetUserMealsByDay : IGetUserMealsByDay{
 
         var result = await _db.UserMeal
         .AsNoTracking()
-        .Where(a => a.UserId == userId && a.MealDate == request.Date)
+        .Where(a => a.UserId == userId && a.Id == request.MealId)
         .Select(a => new UserMealsResponse(
             a.Id,
             a.MealName,
@@ -35,7 +35,9 @@ public class GetUserMealsByDay : IGetUserMealsByDay{
             a.ProteinG,
             a.CarbsG,
             a.FatG
-        )).ToListAsync();
+        )).FirstOrDefaultAsync();
+
+        if(result == null) throw new InvalidOperationException("Refeição não encontrada.");
 
         return result;
     }
