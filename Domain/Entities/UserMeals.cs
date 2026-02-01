@@ -17,6 +17,9 @@ public class UserMeal
     [Required]
     [Column("meal_date", TypeName = "date")]
     public DateTime MealDate { get; set; }
+    [Required]
+    [Column("meal_time", TypeName = "time")]
+    public TimeSpan MealTime { get; set; }
 
     [Required]
     [Column("calories")]

@@ -7,7 +7,7 @@ using SmartPlate.Application.Interfaces;
 namespace SmartPlate.Controllers;
 
 [ApiController]
-[Route("user")]
+[Route("userinsights")]
 public class UserInsightsController : ControllerBase
 {
     private readonly IUserDataInsightsCreateCase _userDataInsightsCreateCase;

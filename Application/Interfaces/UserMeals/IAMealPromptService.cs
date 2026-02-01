@@ -1,8 +1,8 @@
-using SmartPlate.Application.DTOs.Prompts;
+using SmartPlate.Application.DTOs.Request;
 
 namespace SmartPlate.Application.Interfaces;
 
 public interface IAMealPromptService
 {
-    Task<string> ExecuteAsync(UserMealInput userMeal);
+    Task<string> ExecuteAsync(UserMealsRequest userMeal);
 }

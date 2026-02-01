@@ -57,6 +57,9 @@ builder.Services.AddScoped<IAIInsightsPromptService, AIInsightsPromptService>();
 builder.Services.AddScoped<IUserDataInsightsCreateCase, UserDataInsightsCreateCase>();
 builder.Services.AddScoped<IParseGeminiUserInsightsCase, ParseGeminiUserInsightsCase>();
 builder.Services.AddScoped<IUserDataInsightsByUserIdCase, UserDataInsightsByUserIdCase>();
+builder.Services.AddScoped<IAMealPromptService, AIMealPromptService>();
+builder.Services.AddScoped<IParseGeminiUserMealCase, ParseGeminiUserMealCase>();
+builder.Services.AddScoped<IUserMealsCreate, UserMealsCreate>();
 builder.Services.AddHttpClient<IAIClient, AIClient>();
 builder.Services.AddScoped<JwtTokenGenerator>();
 builder.Services.Configure<GeminiOptions>(

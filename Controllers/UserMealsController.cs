@@ -10,18 +10,15 @@ namespace SmartPlate.Controllers;
 [Route("usermeals")]
 public class UserMealsController : ControllerBase
 {
-    private readonly IUserDataInsightsCreateCase _userDataInsightsCreateCase;
-    private readonly IUserDataInsightsByUserIdCase _userDataInsightsByUserIdCase;
-    public UserMealsController(IUserDataInsightsCreateCase userDataInsightsCreateCase,
-    IUserDataInsightsByUserIdCase userDataInsightsByUserIdCase)
+    private readonly IUserMealsCreate _userMealCreate;
+    public UserMealsController(IUserMealsCreate userMealCreate)
     {
-        _userDataInsightsCreateCase = userDataInsightsCreateCase;
-        _userDataInsightsByUserIdCase = userDataInsightsByUserIdCase;
+        _userMealCreate = userMealCreate;
     }
 
-    [HttpPost("userinsights")]
+    [HttpPost("usermeal")]
     [Authorize]
-    public async Task<IActionResult> RegisterUserDataInsights()
+    public async Task<IActionResult> RegisterUserMeal([FromBody] UserMealsRequest request)
     {
         try
         {
@@ -31,7 +28,7 @@ public class UserMealsController : ControllerBase
 
             var userId = Guid.Parse(userIdClaim.Value);
 
-            var data = await _userDataInsightsCreateCase.ExecuteAsync(userId);
+            var data = await _userMealCreate.ExecuteAsync(userId, request);
             return Ok(data);
         }
         catch (ArgumentException ex) // Value objects
@@ -44,7 +41,7 @@ public class UserMealsController : ControllerBase
         }
     }
 
-    [HttpGet("userinsights")]
+    [HttpGet("usermeals")]
     [Authorize]
     public async Task<IActionResult> GetUserDataInsights()
     {
@@ -54,7 +51,6 @@ public class UserMealsController : ControllerBase
 
         var userId = Guid.Parse(userIdClaim.Value);
 
-        var data = await _userDataInsightsByUserIdCase.ExecuteAsync(userId);
-        return Ok(data);
+        return Ok();
     }
 }

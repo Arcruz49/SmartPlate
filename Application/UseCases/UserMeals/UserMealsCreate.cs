@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartPlate.Application.DTOs.Request;
 using SmartPlate.Application.DTOs.Responses;
 using SmartPlate.Application.Interfaces;
+using SmartPlate.Domain.Entities;
 using SmartPlate.Infrastructure.Data;
 
 
@@ -10,26 +11,54 @@ namespace SmartPlate.Application.UseCases;
 public class UserMealsCreate : IUserMealsCreate{
 
     private readonly Context _db;
+    private readonly IAMealPromptService _mealPromptService;
+    private readonly IAIClient _aiClient;
+    private readonly IParseGeminiUserMealCase _parseGeminiUserMeal;
+
     
-    public UserMealsCreate(Context db)
+    public UserMealsCreate(Context db, IAMealPromptService mealPromptService, IAIClient aiClient, IParseGeminiUserMealCase parseGeminiUserMealCase)
     {
         _db = db;
-        
+        _mealPromptService = mealPromptService;
+        _aiClient = aiClient;
+        _parseGeminiUserMeal = parseGeminiUserMealCase;
     }
-    public async Task<UserMealsResponse> ExecuteAsync(UserMealsRequest request)
+    public async Task<UserMealsResponse> ExecuteAsync(Guid userId, UserMealsRequest request)
     {
         var user = await _db.Users.AsNoTracking().Where(a => a.Id == userId).AnyAsync();
 
         if(!user) throw new InvalidOperationException("Usuário não encontrado.");
 
-        var userDataInsight = _db.UserDataInsights.AsNoTracking().FirstOrDefault(a => a.UserId == userId) ?? throw new InvalidOperationException("Dados não encontrados");;
+        var prompt = await _mealPromptService.ExecuteAsync(request);
 
-        return new UserDataInsightsResponse(
-            userDataInsight.TargetCalories ?? 0,
-            userDataInsight.ProteinTargetG ?? 0, 
-            userDataInsight.CarbsTargetG ?? 0, 
-            userDataInsight.FatTargetG ?? 0, 
-            userDataInsight.SleepHoursTarget ?? 0
+        var aiRawResponse = await _aiClient.SendPromptAsync(prompt, request.ImageBytes);
+
+        var mealData = await _parseGeminiUserMeal.ExecuteAsync(aiRawResponse);
+
+        var meal = await _parseGeminiUserMeal.ExecuteAsync(aiRawResponse);
+
+        var newUserMeal = new UserMeal
+        {
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            MealDate = DateTime.Now.Date,
+            MealTime = DateTime.Now.TimeOfDay,
+            Calories = Convert.ToInt32(meal.calories),
+            ProteinG = Convert.ToInt32(meal.protein_g),
+            CarbsG = Convert.ToInt32(meal.carbs_g),
+            FatG = Convert.ToInt32(meal.fat_g)
+        };
+
+        _db.UserMeal.Add(newUserMeal);
+        await _db.SaveChangesAsync();
+
+        return new UserMealsResponse(
+            newUserMeal.MealDate,
+            newUserMeal.MealTime,
+            newUserMeal.Calories,
+            newUserMeal.ProteinG,
+            newUserMeal.CarbsG,
+            newUserMeal.FatG
         );
 
     }
