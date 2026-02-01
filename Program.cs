@@ -19,12 +19,17 @@ builder.Services.AddCors(options =>
     options.AddPolicy("FrontendPolicy", policy =>
     {
         policy
-            .WithOrigins("http://localhost:5173")
+            .WithOrigins(
+                "http://localhost:5173",
+                "http://192.168.1.69:5173",
+                "http://100.94.132.33:5173"
+            )
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();
     });
 });
+
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
