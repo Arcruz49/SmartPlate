@@ -22,9 +22,12 @@ public class GetUserMealsByDay : IGetUserMealsByDay{
 
         if(!user) throw new InvalidOperationException("Usuário não encontrado.");
 
+        var startOfDay = request.Date.Date;
+        var endOfDay = startOfDay.AddDays(1);
+
         var result = await _db.UserMeal
         .AsNoTracking()
-        .Where(a => a.UserId == userId && a.MealDate == request.Date)
+        .Where(a => a.UserId == userId && a.MealDate >= startOfDay && a.MealDate < endOfDay)
         .Select(a => new UserMealsResponse(
             a.Id,
             a.MealName,
