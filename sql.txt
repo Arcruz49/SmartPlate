@@ -108,6 +108,8 @@ CREATE TABLE user_meals (
     carbs_g NUMERIC(6,2) NOT NULL,
     fat_g NUMERIC(6,2) NOT NULL,
 
+    explanation VARCHAR(800),
+
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP
 );

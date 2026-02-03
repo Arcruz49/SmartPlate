@@ -40,16 +40,17 @@ public class AIMealPromptService : IAMealPromptService
                     calories = "number (total kcal)",
                     protein_g = "number (total grams)",
                     carbs_g = "number (total grams)",
-                    fat_g = "number (total grams)"
+                    fat_g = "number (total grams)",
+                    explanation = "short portuguese explanation of how the nutritional estimates were derived (max 800 characters)"
                 }
             },
 
             instruction =
                 "Use the image as the primary source and the description as additional context. " +
                 "Return ONLY the JSON object following the schema keys. " +
-                "Rules: numbers only, no text or units, no explanations, no extra fields, " +
-                "no commentary, no markdown, only valid JSON. " +
-                "If no image is available, rely solely on the description and standard portion assumptions."
+                "Rules: numeric fields must contain numbers only with no units or text. " +
+                "The 'explanation' field must contain a short Portuguese explanation (max 800 characters). " +
+                "No extra fields, no commentary outside JSON, no markdown, only valid JSON."
         };
 
         return JsonSerializer.Serialize(prompt);

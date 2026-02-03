@@ -5,4 +5,5 @@ public class MealData
     public decimal protein_g { get; set; }
     public decimal carbs_g { get; set; }
     public decimal fat_g { get; set; }
+    public string explanation { get; set; } = string.Empty;
 }

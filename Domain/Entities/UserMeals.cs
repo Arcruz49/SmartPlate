@@ -50,6 +50,9 @@ public class UserMeal
 
     [Column("updated_at")]
     public DateTime? UpdatedAt { get; set; }
+    
+    [Column("explanation")]
+    public string Explanation { get; set; } = string.Empty;
 
     [ForeignKey(nameof(UserId))]
     public User User { get; set; } = null!;
