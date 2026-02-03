@@ -41,7 +41,9 @@ public class AIMealPromptService : IAMealPromptService
                     protein_g = "number (total grams)",
                     carbs_g = "number (total grams)",
                     fat_g = "number (total grams)",
-                    explanation = "short portuguese explanation of how the nutritional estimates were derived (max 800 characters)"
+                    explanation = "short portuguese explanation of how the nutritional estimates were derived (max 800 characters)",
+                    advice = "short portuguese nutritional advice or suggestion based on meal (max 200 characters)"
+
                 }
             },
 
@@ -49,8 +51,10 @@ public class AIMealPromptService : IAMealPromptService
                 "Use the image as the primary source and the description as additional context. " +
                 "Return ONLY the JSON object following the schema keys. " +
                 "Rules: numeric fields must contain numbers only with no units or text. " +
-                "The 'explanation' field must contain a short Portuguese explanation (max 800 characters). " +
+                "The 'explanation' field must contain a short Portuguese explanation (max 800 characters) about how you estimated the nutritional values. " +
+                "The 'advice' field must contain a brief Portuguese nutritional suggestion or tip based on the meal (max 200 characters), e.g., reduce sugar, add protein, etc. " +
                 "No extra fields, no commentary outside JSON, no markdown, only valid JSON."
+
         };
 
         return JsonSerializer.Serialize(prompt);

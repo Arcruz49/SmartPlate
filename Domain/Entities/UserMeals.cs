@@ -54,6 +54,9 @@ public class UserMeal
     [Column("explanation")]
     public string Explanation { get; set; } = string.Empty;
 
+    [Column("advice")]
+    public string Advice { get; set; } = string.Empty;
+
     [ForeignKey(nameof(UserId))]
     public User User { get; set; } = null!;
 }
