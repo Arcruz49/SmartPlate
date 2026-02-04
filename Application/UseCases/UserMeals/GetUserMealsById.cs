@@ -16,7 +16,7 @@ public class GetUserMealsById : IGetUserMealsById{
     {
         _db = db;
     }
-    public async Task<UserMealsResponse> ExecuteAsync(Guid userId, UserMealsIdRequest request)
+    public async Task<UserMealByIDResponse> ExecuteAsync(Guid userId, UserMealsIdRequest request)
     {
         var user = await _db.Users.AsNoTracking().Where(a => a.Id == userId).AnyAsync();
 
@@ -25,7 +25,7 @@ public class GetUserMealsById : IGetUserMealsById{
         var result = await _db.UserMeal
         .AsNoTracking()
         .Where(a => a.UserId == userId && a.Id == request.MealId)
-        .Select(a => new UserMealsResponse(
+        .Select(a => new UserMealByIDResponse(
             a.Id,
             a.MealName,
             a.MealDescription,
@@ -34,7 +34,9 @@ public class GetUserMealsById : IGetUserMealsById{
             a.Calories,
             a.ProteinG,
             a.CarbsG,
-            a.FatG
+            a.FatG,
+            a.Explanation,
+            a.Advice
         )).FirstOrDefaultAsync();
 
         if(result == null) throw new InvalidOperationException("Refeição não encontrada.");

@@ -5,5 +5,5 @@ namespace SmartPlate.Application.Interfaces;
 
 public interface IGetUserMealsById
 {
-    Task<UserMealsResponse> ExecuteAsync(Guid userId, UserMealsIdRequest request);
+    Task<UserMealByIDResponse> ExecuteAsync(Guid userId, UserMealsIdRequest request);
 }
