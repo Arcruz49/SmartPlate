@@ -49,7 +49,7 @@ public class UserMealsCreate : IUserMealsCreate{
             CarbsG = Convert.ToInt32(meal.carbs_g),
             FatG = Convert.ToInt32(meal.fat_g),
             Explanation = meal.explanation,
-            Advice = meal.explanation,
+            Advice = meal.advice,
         };
 
         _db.UserMeal.Add(newUserMeal);
