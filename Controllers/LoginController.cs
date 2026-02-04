@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using SmartPlate.Application.DTOs.Request;
 using SmartPlate.Application.Interfaces;
 
@@ -17,6 +18,7 @@ public class LoginController : ControllerBase
     }
 
     [HttpPost("register")]
+    [EnableRateLimiting("RegisterPolicy")]
     public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
     {
         try
@@ -35,6 +37,7 @@ public class LoginController : ControllerBase
     }
 
     [HttpPost("login")]
+    [EnableRateLimiting("LoginPolicy")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
         try
