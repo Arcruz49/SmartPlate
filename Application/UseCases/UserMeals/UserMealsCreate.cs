@@ -32,8 +32,6 @@ public class UserMealsCreate : IUserMealsCreate{
 
         var aiRawResponse = await _aiClient.SendPromptAsync(prompt, request.ImageBytes);
 
-        var mealData = await _parseGeminiUserMeal.ExecuteAsync(aiRawResponse);
-
         var meal = await _parseGeminiUserMeal.ExecuteAsync(aiRawResponse);
 
         var newUserMeal = new UserMeal
