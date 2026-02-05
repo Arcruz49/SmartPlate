@@ -28,6 +28,8 @@ public class UserMealsCreate : IUserMealsCreate{
 
         if(!user) throw new InvalidOperationException("Usuário não encontrado.");
 
+        if(request.MealDate.Date > DateTime.Now.Date) throw new InvalidOperationException("Data inválida.");
+
         var prompt = await _mealPromptService.ExecuteAsync(request);
 
         var aiRawResponse = await _aiClient.SendPromptAsync(prompt, request.ImageBytes);
@@ -40,8 +42,8 @@ public class UserMealsCreate : IUserMealsCreate{
             UserId = userId,
             MealName = request.MealName,
             MealDescription = request.Description,
-            MealDate = DateTime.Now.Date,
-            MealTime = DateTime.Now.TimeOfDay,
+            MealDate = request.MealDate.Date,
+            MealTime = request.MealDate.TimeOfDay,
             Calories = Convert.ToInt32(meal.calories),
             ProteinG = Convert.ToInt32(meal.protein_g),
             CarbsG = Convert.ToInt32(meal.carbs_g),

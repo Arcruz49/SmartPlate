@@ -129,7 +129,8 @@ Request:
 {
   "mealName": "string",
   "description": "string",
-  "imageBytes": "byte[] (opcional)"
+  "imageBytes": "byte[] (opcional)",
+  "mealDate": "datetime (opcional)"
 }
 
 Response (200):
