@@ -12,7 +12,7 @@ public class ParseGeminiUserMealCase : IParseGeminiUserMealCase{
     {
         _db = db;
     }
-    public async Task<MealData> ExecuteAsync(string rawJson)
+    public Task<MealData> ExecuteAsync(string rawJson)
     {
         var fullResponse = JsonSerializer.Deserialize<GeminiResponse>(rawJson)
             ?? throw new InvalidOperationException("Resposta da IA inválida (JSON nulo).");
@@ -24,6 +24,6 @@ public class ParseGeminiUserMealCase : IParseGeminiUserMealCase{
         var mealData = JsonSerializer.Deserialize<MealData>(mealDataJson)
             ?? throw new InvalidOperationException("Falha ao desserializar NutritionInsight.");
 
-        return mealData;
+        return Task.FromResult(mealData);
     }
 }

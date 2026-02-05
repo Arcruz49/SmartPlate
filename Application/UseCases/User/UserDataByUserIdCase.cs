@@ -30,7 +30,9 @@ public class UserDataByUserIdCase : IUserDataByUserIdCase{
             userData.UserGoal,
             userData.SleepQuality,
             userData.StressLevel,
-            userData.RoutineConsistency
+            userData.RoutineConsistency,
+            userData.WorkoutDetails ?? "",
+            userData.DailyActivityDetails ?? ""
         );
     }
 }

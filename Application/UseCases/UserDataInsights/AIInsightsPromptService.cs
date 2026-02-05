@@ -5,29 +5,31 @@ using SmartPlate.Application.DTOs.Prompts;
 using System.Text.Json;
 
 namespace SmartPlate.Application.UseCases;
-
 public class AIInsightsPromptService : IAIInsightsPromptService
 {
     public AIInsightsPromptService()
     {
     }
-
-    public async Task<string> ExecuteAsync(UserDataResponse userData)
+    public Task<string> ExecuteAsync(UserDataResponse userData)
     {
         var prompt = new UserDataInsightPrompt
         {
             system_instruction =
                 "You are an expert AI Sports Nutritionist focused on evidence-based performance nutrition. " +
                 "Your task is to calculate realistic daily nutritional targets and recovery needs using accepted sports science principles. " +
+                "You MUST incorporate the user's workout_details and daily_activity_details as qualitative modifiers of energy expenditure and recovery demand. " +
+                "These descriptions refine the activity multiplier and training load estimation. " +
                 "Methodology rules: " +
                 "1. Calculate BMR using the Mifflin-St Jeor equation. " +
-                "2. Apply an activity multiplier based on workouts, training intensity, and daily activity. " +
-                "3. Adjust calories according to the user's goal (moderate deficit for fat loss, moderate surplus for muscle gain, maintenance otherwise). " +
-                "4. Set protein targets based on body weight and training level. " +
+                "2. Estimate total energy expenditure using BOTH structured training (workouts_per_week, training_type, training_intensity, workout_details) AND lifestyle activity (daily_activity_level + daily_activity_details). " +
+                "3. Adjust calories according to the user's goal: moderate deficit for fat loss, moderate surplus for muscle gain, maintenance otherwise. " +
+                "4. Set protein targets based on body weight and training load. " +
                 "5. Distribute remaining calories into carbs and fats using balanced athletic ratios. " +
-                "6. Recommend sleep duration based on recovery needs and stress level. " +
+                "6. Recommend sleep duration based on recovery demand, stress level, and training intensity. " +
                 "Prefer realistic, sustainable values suitable for long-term adherence. " +
-                "Avoid extreme cutting or bulking recommendations.",
+                "Avoid extreme cutting, bulking, or unsafe recommendations. " +
+                "Assume the user is a natural athlete. " +
+                "If the provided details are vague or missing, fall back to conservative estimates rather than guessing.",
 
             user_data = new UserDataInput
             {
@@ -42,7 +44,9 @@ public class AIInsightsPromptService : IAIInsightsPromptService
                 user_goal = userData.Goal.ToString(),
                 sleep_quality = userData.SleepQuality,
                 stress_level = userData.StressLevel,
-                routine_consistency = userData.RoutineConsistency
+                routine_consistency = userData.RoutineConsistency,
+                workout_details = userData.WorkoutDetails,
+                daily_activity_details = userData.DailyActivityDetails
             },
 
             response_format = new ResponseFormatUserData
@@ -65,6 +69,6 @@ public class AIInsightsPromptService : IAIInsightsPromptService
                 "Values must be realistic and internally consistent with caloric totals."
         };
 
-        return JsonSerializer.Serialize(prompt);
+        return Task.FromResult(JsonSerializer.Serialize(prompt));
     }
 }

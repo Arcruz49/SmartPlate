@@ -14,7 +14,6 @@ public class UserDataCreateCase : IUserDataCreateCase
     {
         _db = db;
     }
-
     public async Task<UserDataResponse> ExecuteAsync(Guid userId, UserDataRequest request)
     {
         var userExists = await _db.Users
@@ -50,6 +49,8 @@ public class UserDataCreateCase : IUserDataCreateCase
         userData.SleepQuality = request.SleepQuality;
         userData.StressLevel = request.StressLevel;
         userData.RoutineConsistency = request.RoutineConsistency;
+        userData.WorkoutDetails = request.WorkoutDetails;
+        userData.DailyActivityDetails = request.DailyActivityDetails;
         userData.UpdatedAt = DateTime.UtcNow;
 
         await _db.SaveChangesAsync();
@@ -66,7 +67,9 @@ public class UserDataCreateCase : IUserDataCreateCase
             userData.UserGoal,
             userData.SleepQuality,
             userData.StressLevel,
-            userData.RoutineConsistency
+            userData.RoutineConsistency,
+            userData.WorkoutDetails,
+            userData.DailyActivityDetails
         );
     }
 }

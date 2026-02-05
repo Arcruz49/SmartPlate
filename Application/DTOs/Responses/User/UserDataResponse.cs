@@ -14,5 +14,7 @@ public record UserDataResponse(
     UserGoals Goal,
     int? SleepQuality,
     int? StressLevel,
-    int? RoutineConsistency
+    int? RoutineConsistency,
+    string WorkoutDetails,
+    string DailyActivityDetails
 );

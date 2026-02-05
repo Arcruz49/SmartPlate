@@ -49,9 +49,11 @@ Request:
   "trainingIntensity": enum,
   "dailyActivityLevel": enum,
   "goal": enum,
-  "sleepQuality": int,
-  "stressLevel": int,
-  "routineConsistency": int
+  "sleepQuality": int (opcional),
+  "stressLevel": int (opcional),
+  "routineConsistency": int (opcional),
+  "workoutDetails": "string",
+  "dailyActivityDetails": "string"
 }
 
 Response (200):
@@ -65,9 +67,11 @@ Response (200):
   "trainingIntensity": enum,
   "dailyActivityLevel": enum,
   "goal": enum,
-  "sleepQuality": int,
-  "stressLevel": int,
-  "routineConsistency": int
+  "sleepQuality": int (opcional),
+  "stressLevel": int (opcional),
+  "routineConsistency": int (opcional),
+  "workoutDetails": "string",
+  "dailyActivityDetails": "string"
 }
 
 GET /user/userdata
@@ -83,9 +87,11 @@ Response (200):
   "trainingIntensity": enum,
   "dailyActivityLevel": enum,
   "goal": enum,
-  "sleepQuality": int,
-  "stressLevel": int,
-  "routineConsistency": int
+  "sleepQuality": int (opcional),
+  "stressLevel": int (opcional),
+  "routineConsistency": int (opcional),
+  "workoutDetails": "string",
+  "dailyActivityDetails": "string"
 }
 
 INSIGHTS DO USUÁRIO (userinsights)
@@ -123,7 +129,7 @@ Request:
 {
   "mealName": "string",
   "description": "string",
-  "imageBytes": "byte[]"
+  "imageBytes": "byte[] (opcional)"
 }
 
 Response (200):
@@ -139,8 +145,9 @@ Response (200):
   "fat_g": decimal
 }
 
-GET /usermeals/usermeal?Date=<datetime>
+GET /usermeals/usermeal
 Headers: Authorization: Bearer <token>
+Query Parameters: Date=<datetime>
 Response (200):
 [
   {
@@ -156,8 +163,9 @@ Response (200):
   }
 ]
 
-GET /usermeals/usermealById?MealId=<guid>
+GET /usermeals/usermealById
 Headers: Authorization: Bearer <token>
+Query Parameters: MealId=<guid>
 Response (200):
 {
   "mealId": "guid",
@@ -175,11 +183,30 @@ DELETE /usermeals/usermeal
 Headers: Authorization: Bearer <token>
 Request:
 {
-  "MealId": "guid"
+  "mealId": "guid"
 }
 
 Response (204):
 No Content
+
+MÉTRICAS DO USUÁRIO (metrics)
+------------------------------
+
+GET /metrics/mealmetrics
+Headers: Authorization: Bearer <token>
+Query Parameters: 
+{
+  "metricsTime": "enum (Daily, Weekly, Monthly)"
+}
+
+Response (200):
+{
+  "meal_date": "datetime",
+  "calories_total": "decimal",
+  "protein_g_total": "decimal", 
+  "carbs_g_total": "decimal",
+  "fat_g_total": "decimal"
+}
 
 ERROS COMUNS
 ------------

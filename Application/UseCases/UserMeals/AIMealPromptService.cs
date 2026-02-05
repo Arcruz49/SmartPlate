@@ -12,7 +12,7 @@ public class AIMealPromptService : IAMealPromptService
     {
     }
 
-    public async Task<string> ExecuteAsync(UserMealsRequest userMeal)
+    public Task<string> ExecuteAsync(UserMealsRequest userMeal)
     {
         var prompt = new UserMealPrompt
         {
@@ -57,6 +57,6 @@ public class AIMealPromptService : IAMealPromptService
 
         };
 
-        return JsonSerializer.Serialize(prompt);
+        return Task.FromResult(JsonSerializer.Serialize(prompt));
     }
 }

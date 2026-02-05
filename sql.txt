@@ -58,6 +58,8 @@ CREATE TABLE user_data (
     training_type training_type NOT NULL,
     training_intensity training_intensity NOT NULL,
     daily_activity_level daily_activity_level NOT NULL,
+    workout_details varchar(500),
+    daily_activity_details varchar(500),
 
     user_goal user_goal NOT NULL,
 

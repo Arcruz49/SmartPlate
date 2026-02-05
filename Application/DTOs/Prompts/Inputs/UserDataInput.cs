@@ -14,4 +14,6 @@ public class UserDataInput
     public int? sleep_quality { get; set; }
     public int? stress_level { get; set; }
     public int? routine_consistency { get; set; }
+    public string workout_details { get; set; } = string.Empty;
+    public string daily_activity_details { get; set; } = string.Empty;
 }

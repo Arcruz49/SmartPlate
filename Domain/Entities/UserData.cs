@@ -65,6 +65,12 @@ public class UserData
     [Column("updated_at")]
     public DateTime? UpdatedAt { get; set; }
 
+    [Column("workout_details")]
+    public string? WorkoutDetails { get; set; } = string.Empty;
+
+    [Column("daily_activity_details")]
+    public string? DailyActivityDetails { get; set; } = string.Empty;
+
     [ForeignKey(nameof(UserId))]
     public User User { get; set; } = null!;
 }

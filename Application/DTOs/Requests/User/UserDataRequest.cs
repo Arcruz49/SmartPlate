@@ -17,4 +17,6 @@ public class UserDataRequest
     public int? SleepQuality { get; set; }
     public int? StressLevel { get; set; }
     public int? RoutineConsistency { get; set; }
+    public string WorkoutDetails { get; set; } = string.Empty;
+    public string DailyActivityDetails { get; set; } = string.Empty;
 }
