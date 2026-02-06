@@ -14,8 +14,9 @@ public class UserBodyMetrics
     [Column("user_id")]
     public Guid UserId { get; set; }
 
-    [Column("metric_date")]
-    public DateTime? MetricDate { get; set; } = DateTime.Now;
+    [Required]
+    [Column("metric_date", TypeName = "date")]
+    public DateTime MetricDate { get; set; }
 
     [Column("weight_kg")]
     public decimal? WeightKg { get; set; }
