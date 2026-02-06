@@ -11,9 +11,11 @@ namespace SmartPlate.Controllers;
 public class UserMetricsController : ControllerBase
 {
     private IUserMealMetricsCase _userMealMetricsCase;
-    public UserMetricsController(IUserMealMetricsCase userMealMetricsCase)
+    private IGetUserMetricsCase _getUserMetricsCase;
+    public UserMetricsController(IUserMealMetricsCase userMealMetricsCase, IGetUserMetricsCase getUserMetricsCase)
     {
         _userMealMetricsCase = userMealMetricsCase;        
+        _getUserMetricsCase = getUserMetricsCase;        
     }
 
     [HttpGet("mealmetrics")]
@@ -27,6 +29,21 @@ public class UserMetricsController : ControllerBase
         var userId = Guid.Parse(userIdClaim.Value);
 
         var metrics = await _userMealMetricsCase.ExecuteAsync(userId, request);
+
+        return Ok(metrics);
+    }
+
+    [HttpGet("userbodymetrics")]
+    [Authorize]
+    public async Task<IActionResult> GetUserBodyMetrics()
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
+
+        if (userIdClaim is null) return Unauthorized();
+
+        var userId = Guid.Parse(userIdClaim.Value);
+
+        var metrics = await _getUserMetricsCase.ExecuteAsync(userId);
 
         return Ok(metrics);
     }

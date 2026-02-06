@@ -113,6 +113,7 @@ builder.Services.AddScoped<IUserMealsDelete, UserMealDeleteCase>();
 builder.Services.AddScoped<IGetUserMealsById, GetUserMealsById>();
 builder.Services.AddScoped<IUserMealMetricsCase, UserMealMetricsCase>();
 builder.Services.AddScoped<IRegisterUserBodyMetricsCase, RegisterUserBodyMetricsCase>();
+builder.Services.AddScoped<IGetUserMetricsCase, GetUserMetricsCase>();
 builder.Services.AddHttpClient<IAIClient, AIClient>();
 builder.Services.AddScoped<JwtTokenGenerator>();
 builder.Services.Configure<GeminiOptions>(
