@@ -26,7 +26,6 @@ public class RegisterUserBodyMetricsCase : IRegisterUserBodyMetricsCase{
             UserId = snapshot.UserId,
             MetricDate = snapshot.MetricDate,
             WeightKg = snapshot.WeightKg,
-            CreatedAt = DateTime.Now
         };
 
         _db.Add(userBodyMetrics);
