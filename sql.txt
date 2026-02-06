@@ -116,3 +116,27 @@ CREATE TABLE user_meals (
     updated_at TIMESTAMP
 );
 
+CREATE TABLE user_body_metrics (
+    id UUID PRIMARY KEY,
+
+    user_id UUID NOT NULL,
+    metric_date DATE NOT NULL,
+
+    weight_kg NUMERIC(5,2) NOT NULL,
+    body_fat_percent NUMERIC(5,2),
+    muscle_mass_kg NUMERIC(5,2),
+
+    waist_cm NUMERIC(5,2),
+    chest_cm NUMERIC(5,2),
+
+    note VARCHAR(500),
+
+    created_at TIMESTAMP DEFAULT NOW(),
+
+    CONSTRAINT fk_user_body_metrics
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    UNIQUE(user_id, metric_date)
+);

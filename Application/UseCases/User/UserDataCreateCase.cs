@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SmartPlate.Application.DTOs.Request;
 using SmartPlate.Application.DTOs.Responses;
+using SmartPlate.Application.DTOs.Snapshots;
 using SmartPlate.Application.Interfaces;
 using SmartPlate.Infrastructure.Data;
 
@@ -9,10 +10,13 @@ namespace SmartPlate.Application.UseCases;
 public class UserDataCreateCase : IUserDataCreateCase
 {
     private readonly Context _db;
+    private readonly IRegisterUserBodyMetricsCase _registerUserBodyMetricsCase;
 
-    public UserDataCreateCase(Context db)
+
+    public UserDataCreateCase(Context db, IRegisterUserBodyMetricsCase registerUserBodyMetricsCase)
     {
         _db = db;
+        _registerUserBodyMetricsCase = registerUserBodyMetricsCase;
     }
     public async Task<UserDataResponse> ExecuteAsync(Guid userId, UserDataRequest request)
     {
@@ -54,6 +58,18 @@ public class UserDataCreateCase : IUserDataCreateCase
         userData.UpdatedAt = DateTime.UtcNow;
 
         await _db.SaveChangesAsync();
+
+        var snapshot = new UserBodyMetricsSnapshot(
+            userId,
+            userData.WeightKg,
+            null,
+            null,
+            null,
+            null,
+            DateTime.Now
+        );
+
+        await _registerUserBodyMetricsCase.ExecuteAsync(snapshot);
 
         return new UserDataResponse(
             userData.WeightKg,
