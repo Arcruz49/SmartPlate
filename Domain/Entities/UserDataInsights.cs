@@ -29,7 +29,7 @@ public class UserDataInsights
     public decimal? SleepHoursTarget { get; set; }
 
     [Column("ai_generated")]
-    public bool AiGenerated { get; set; }
+    public bool? AiGenerated { get; set; }
 
     [Column("created_at")]
     public DateTime CreatedAt { get; set; }
