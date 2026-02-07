@@ -22,8 +22,6 @@ public class UserMealsRuleCreate : IUserMealsRuleCreate{
 
         if(!user) throw new InvalidOperationException("Usuário não encontrado.");
 
-        
-
         var newUserMeal = new UserMeal
         {
             Id = Guid.NewGuid(),
@@ -34,6 +32,7 @@ public class UserMealsRuleCreate : IUserMealsRuleCreate{
             Calories = request.Calories,
             ProteinG = request.CarbsG,
             FatG = request.CarbsG,
+            AiGenerated = false,
         };
 
         _db.UserMeal.Add(newUserMeal);
