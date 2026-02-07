@@ -19,10 +19,12 @@ public class GetUserMetricsCase : IGetUserMetricsCase{
         return await _db.UserBodyMetrics
             .AsNoTracking()
             .Where(m => m.UserId == userId)
-            .Select(g => new UserBodyMetricsResponse(
-                g.WeightKg ?? 0,
-                g.MetricDate
+            .OrderBy(m => m.MetricDate)
+            .Select(m => new UserBodyMetricsResponse(
+                m.WeightKg ?? 0,
+                m.MetricDate
             ))
-            .OrderBy(g => g.MetricDate).ToListAsync();
+            .ToListAsync();
     }
+
 }

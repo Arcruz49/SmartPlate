@@ -136,7 +136,6 @@ CREATE TABLE user_body_metrics (
     CONSTRAINT fk_user_body_metrics
         FOREIGN KEY (user_id)
         REFERENCES users(id)
-        ON DELETE CASCADE,
+        ON DELETE CASCADE
 
-    UNIQUE(user_id, metric_date)
 );
