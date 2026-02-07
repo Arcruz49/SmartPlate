@@ -30,8 +30,9 @@ public class UserMealsRuleCreate : IUserMealsRuleCreate{
             MealDate = request.MealDate.Date,
             MealTime = request.MealDate.TimeOfDay,
             Calories = request.Calories,
-            ProteinG = request.CarbsG,
-            FatG = request.CarbsG,
+            ProteinG = request.ProteinG,
+            FatG = request.FatG,
+            CarbsG = request.CarbsG,
             AiGenerated = false,
         };
 

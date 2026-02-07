@@ -111,6 +111,7 @@ CREATE TABLE user_meals (
     fat_g NUMERIC(6,2) NOT NULL,
 
     explanation VARCHAR(800),
+    advice VARCHAR(800),
 
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP
@@ -143,4 +144,7 @@ CREATE TABLE user_body_metrics (
 
 
 alter table user_data_insights 
+add column ai_generated bool;
+
+alter table user_meals 
 add column ai_generated bool;
