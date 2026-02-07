@@ -4,5 +4,5 @@ using SmartPlate.Application.DTOs.Request;
 using SmartPlate.Application.DTOs.Responses;
 public interface IUserMealsRuleCreate
 {
-    Task<UserMealsResponse> ExecuteAsync(Guid userId, UserMealsRequest request);
+    Task<UserMealsResponse> ExecuteAsync(Guid userId, UserMealsRuleRequest request);
 }
