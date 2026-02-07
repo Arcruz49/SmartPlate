@@ -23,7 +23,7 @@ public class UserDataInsightsByUserIdCase : IUserDataInsightsByUserIdCase{
 
         if(!user) throw new InvalidOperationException("Usuário não encontrado.");
 
-        var userDataInsight = _db.UserDataInsights.AsNoTracking().FirstOrDefault(a => a.UserId == userId) ?? throw new InvalidOperationException("Dados não encontrados");;
+        var userDataInsight = await _db.UserDataInsights.AsNoTracking().FirstOrDefaultAsync(a => a.UserId == userId) ?? throw new InvalidOperationException("Dados não encontrados");
 
         return new UserDataInsightsResponse(
             userDataInsight.TargetCalories ?? 0,

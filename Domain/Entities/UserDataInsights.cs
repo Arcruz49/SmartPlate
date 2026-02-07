@@ -28,6 +28,9 @@ public class UserDataInsights
     [Column("sleep_hours_target", TypeName = "numeric(4,2)")]
     public decimal? SleepHoursTarget { get; set; }
 
+    [Column("ai_generated")]
+    public bool AiGenerated { get; set; }
+
     [Column("created_at")]
     public DateTime CreatedAt { get; set; }
 

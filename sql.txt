@@ -139,3 +139,8 @@ CREATE TABLE user_body_metrics (
         ON DELETE CASCADE
 
 );
+
+
+
+alter table user_data_insights 
+add column ai_generated bool;

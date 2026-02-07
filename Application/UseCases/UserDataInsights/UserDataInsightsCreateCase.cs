@@ -66,6 +66,7 @@ public class UserDataInsightsCreateCase : IUserDataInsightsCreateCase
         existingInsight.CarbsTargetG     = nutritionInsight.carbs_target_g;
         existingInsight.FatTargetG       = nutritionInsight.fat_target_g;
         existingInsight.SleepHoursTarget = nutritionInsight.sleep_hours_target;
+        existingInsight.AiGenerated = true;
 
         await _db.SaveChangesAsync();
 

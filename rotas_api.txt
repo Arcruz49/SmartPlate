@@ -120,6 +120,25 @@ Response (200):
   "sleep_hours_target": decimal
 }
 
+POST /userinsights/userinsights-rules
+Headers: Authorization: Bearer <token>
+Request:
+{
+  "targetCalories": decimal,
+  "proteingTargetG": decimal,
+  "carbsTargetG": decimal,
+  "fatTargetG": decimal
+}
+
+Response (200):
+{
+  "target_calories": decimal,
+  "protein_target_g": decimal,
+  "carbs_target_g": decimal,
+  "fat_target_g": decimal,
+  "sleep_hours_target": decimal
+}
+
 REFEIÇÕES DO USUÁRIO (usermeals)
 ---------------------------------
 
@@ -207,6 +226,16 @@ Response (200):
   "protein_g_total": "decimal", 
   "carbs_g_total": "decimal",
   "fat_g_total": "decimal"
+}
+
+GET /metrics/userbodymetrics
+Headers: Authorization: Bearer <token>
+Query Parameters: (nenhum)
+
+Response (200):
+{
+  "weightKg": decimal,
+  "metricDate": "datetime"
 }
 
 ERROS COMUNS
