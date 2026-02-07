@@ -14,12 +14,15 @@ public class UserMealsController : ControllerBase
     private readonly IGetUserMealsByDay _getUserMealsByDay;
     private readonly IUserMealsDelete _userMealDelete;
     private readonly IGetUserMealsById _getUserMealsById;
-    public UserMealsController(IUserMealsCreate userMealCreate, IGetUserMealsByDay getUserMealsByDay, IUserMealsDelete userMealsDelete, IGetUserMealsById getUserMealsById)
+    private readonly IUserMealsRuleCreate _userMealsRuleCreate;
+    public UserMealsController(IUserMealsCreate userMealCreate, IGetUserMealsByDay getUserMealsByDay, IUserMealsDelete userMealsDelete, IGetUserMealsById getUserMealsById,
+    IUserMealsRuleCreate userMealsRuleCreate)
     {
         _userMealCreate = userMealCreate;
         _getUserMealsByDay = getUserMealsByDay;
         _userMealDelete = userMealsDelete;
         _getUserMealsById = getUserMealsById;
+        _userMealsRuleCreate = userMealsRuleCreate;
     }
 
     [HttpPost("usermeal")]
@@ -92,6 +95,31 @@ public class UserMealsController : ControllerBase
             await _userMealDelete.ExecuteAsync(request.MealId, userId);
 
             return NoContent();
+        }
+        catch (ArgumentException ex) // Value objects
+        {
+            return BadRequest(new { success = false, message = ex.Message });
+        }
+        catch (InvalidOperationException ex) // regras de negocio da user case
+        {
+            return BadRequest(new { success = false, message = ex.Message });
+        }
+    }
+
+    [HttpPost("usermeal-rules")]
+    [Authorize]
+    public async Task<IActionResult> RegisterUserMealRules([FromBody] UserMealsRuleRequest request)
+    {
+        try
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
+
+            if (userIdClaim is null) return Unauthorized();
+
+            var userId = Guid.Parse(userIdClaim.Value);
+
+            var data = await _userMealsRuleCreate.ExecuteAsync(userId, request);
+            return Ok(data);
         }
         catch (ArgumentException ex) // Value objects
         {

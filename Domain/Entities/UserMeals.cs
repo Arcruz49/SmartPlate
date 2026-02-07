@@ -55,7 +55,10 @@ public class UserMeal
     public string Explanation { get; set; } = string.Empty;
 
     [Column("advice")]
-    public string Advice { get; set; } = string.Empty;
+    public string Advice { get; set; } = string.Empty;  
+    
+    [Column("ai_generated")]
+    public bool? AiGenerated { get; set; }
 
     [ForeignKey(nameof(UserId))]
     public User User { get; set; } = null!;

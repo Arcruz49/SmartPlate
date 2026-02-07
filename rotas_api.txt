@@ -209,6 +209,39 @@ Request:
 Response (204):
 No Content
 
+POST /usermeals/usermeal-rules
+Headers: Authorization: Bearer <token>
+Request:
+{
+  "mealId": "guid",
+  "targetCalories": decimal,
+  "proteinTargetG": decimal,
+  "carbsTargetG": decimal,
+  "fatTargetG": decimal
+}
+
+Response (200):
+{
+  "mealId": "guid",
+  "mealName": "string",
+  "description": "string",
+  "meal_date": "datetime",
+  "meal_time": "timespan",
+  "calories": decimal,
+  "protein_g": decimal,
+  "carbs_g": decimal,
+  "fat_g": decimal,
+  "target_calories": decimal,
+  "protein_target_g": decimal,
+  "carbs_target_g": decimal,
+  "fat_target_g": decimal,
+  "is_within_targets": boolean,
+  "calories_difference": decimal,
+  "protein_difference": decimal,
+  "carbs_difference": decimal,
+  "fat_difference": decimal
+}
+
 MÉTRICAS DO USUÁRIO (metrics)
 ------------------------------
 

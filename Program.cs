@@ -115,6 +115,7 @@ builder.Services.AddScoped<IUserMealMetricsCase, UserMealMetricsCase>();
 builder.Services.AddScoped<IRegisterUserBodyMetricsCase, RegisterUserBodyMetricsCase>();
 builder.Services.AddScoped<IRegisterUserDataInsightsRulesCase, RegisterUserDataInsightsRulesCase>();
 builder.Services.AddScoped<IGetUserMetricsCase, GetUserMetricsCase>();
+builder.Services.AddScoped<IUserMealsRuleCreate, UserMealsRuleCreate>();
 builder.Services.AddHttpClient<IAIClient, AIClient>();
 builder.Services.AddScoped<JwtTokenGenerator>();
 builder.Services.Configure<GeminiOptions>(
