@@ -12,6 +12,7 @@ using Npgsql;
 using SmartPlate.Domain.Enums;
 using SmartPlate.Infrastructure.AI.Gemini;
 using System.Threading.RateLimiting;
+using SmartPlate.Infrastructure.APIs.OpenFoodFacts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -122,6 +123,9 @@ builder.Services.AddHttpClient<IAIClient, AIClient>();
 builder.Services.AddScoped<JwtTokenGenerator>();
 builder.Services.Configure<GeminiOptions>(
     builder.Configuration.GetSection("AI:Gemini")
+);
+builder.Services.Configure<OpenFoodFactsOptions>(
+    builder.Configuration.GetSection("API:OpenFoodFacts")
 );
 
 builder.Services.AddControllers()

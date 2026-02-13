@@ -130,4 +130,12 @@ public class UserMealsController : ControllerBase
             return BadRequest(new { success = false, message = ex.Message });
         }
     }
+
+    [HttpGet("usermeal-barcode")]
+    [Authorize]
+    public async Task<IActionResult> ReadMealBarCode([FromBody] UserMealBarCodeRequest request)
+    {
+        
+        return Ok();
+    }
 }
