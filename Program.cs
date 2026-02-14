@@ -13,6 +13,7 @@ using SmartPlate.Domain.Enums;
 using SmartPlate.Infrastructure.AI.Gemini;
 using System.Threading.RateLimiting;
 using SmartPlate.Infrastructure.APIs.OpenFoodFacts;
+using SmartPlate.Infrastructure.APIs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -119,7 +120,12 @@ builder.Services.AddScoped<IRegisterUserBodyMetricsCase, RegisterUserBodyMetrics
 builder.Services.AddScoped<IRegisterUserDataInsightsRulesCase, RegisterUserDataInsightsRulesCase>();
 builder.Services.AddScoped<IGetUserMetricsCase, GetUserMetricsCase>();
 builder.Services.AddScoped<IUserMealsRuleCreate, UserMealsRuleCreate>();
+builder.Services.AddScoped<IReadMealBarCodeCase, ReadMealBarCodeCase>();
+builder.Services.AddScoped<IOpenFoodFactsClient, OpenFoodFactsClient>();
+builder.Services.AddScoped<IParseOpenFoodFactsCase, ParseOpenFoodFactsCase>();
+
 builder.Services.AddHttpClient<IAIClient, AIClient>();
+
 builder.Services.AddScoped<JwtTokenGenerator>();
 builder.Services.Configure<GeminiOptions>(
     builder.Configuration.GetSection("AI:Gemini")

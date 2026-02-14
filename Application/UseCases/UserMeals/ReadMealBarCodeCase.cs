@@ -12,18 +12,19 @@ namespace SmartPlate.Application.UseCases;
 public class ReadMealBarCodeCase : IReadMealBarCodeCase{
 
     private readonly IOpenFoodFactsClient _openFoodFactsClient;
+    private readonly IParseOpenFoodFactsCase _parseOpenFoodFactsCase;
 
-    public ReadMealBarCodeCase(IOpenFoodFactsClient openFoodFactsClient)
+    public ReadMealBarCodeCase(IOpenFoodFactsClient openFoodFactsClient, IParseOpenFoodFactsCase parseOpenFoodFactsCase)
     {
         _openFoodFactsClient = openFoodFactsClient;
+        _parseOpenFoodFactsCase = parseOpenFoodFactsCase;
     }
     public async Task<OpenFoodResponse> ExecuteAsync(UserMealBarCodeRequest request)
     {
         var openFoodResponseRawResponse = await _openFoodFactsClient.SendPromptAsync(request.Code);
 
-        return 
+        var info = await _parseOpenFoodFactsCase.ExecuteAsync(openFoodResponseRawResponse);
 
-        
-
+        return info;
     }
 }

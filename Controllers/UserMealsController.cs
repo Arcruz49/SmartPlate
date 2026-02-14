@@ -15,14 +15,16 @@ public class UserMealsController : ControllerBase
     private readonly IUserMealsDelete _userMealDelete;
     private readonly IGetUserMealsById _getUserMealsById;
     private readonly IUserMealsRuleCreate _userMealsRuleCreate;
+    private readonly IReadMealBarCodeCase _readMealBarCodeCase;
     public UserMealsController(IUserMealsCreate userMealCreate, IGetUserMealsByDay getUserMealsByDay, IUserMealsDelete userMealsDelete, IGetUserMealsById getUserMealsById,
-    IUserMealsRuleCreate userMealsRuleCreate)
+    IUserMealsRuleCreate userMealsRuleCreate, IReadMealBarCodeCase readMealBarCodeCase)
     {
         _userMealCreate = userMealCreate;
         _getUserMealsByDay = getUserMealsByDay;
         _userMealDelete = userMealsDelete;
         _getUserMealsById = getUserMealsById;
         _userMealsRuleCreate = userMealsRuleCreate;
+        _readMealBarCodeCase = readMealBarCodeCase;
     }
 
     [HttpPost("usermeal")]
@@ -133,9 +135,13 @@ public class UserMealsController : ControllerBase
 
     [HttpGet("usermeal-barcode")]
     [Authorize]
-    public async Task<IActionResult> ReadMealBarCode([FromBody] UserMealBarCodeRequest request)
+    public async Task<IActionResult> ReadMealBarCode([FromQuery] UserMealBarCodeRequest request)
     {
-        
-        return Ok();
+        if (string.IsNullOrEmpty(request.Code))
+            return BadRequest();
+
+        var mealInfo = await _readMealBarCodeCase.ExecuteAsync(request);
+
+        return Ok(mealInfo);
     }
 }

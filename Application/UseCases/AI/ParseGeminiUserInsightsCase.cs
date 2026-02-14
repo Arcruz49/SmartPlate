@@ -7,10 +7,8 @@ using SmartPlate.Infrastructure.Data;
 namespace SmartPlate.Application.UseCases;
 
 public class ParseGeminiUserInsightsCase : IParseGeminiUserInsightsCase{
-    private readonly Context _db;
-    public ParseGeminiUserInsightsCase(Context db)
+    public ParseGeminiUserInsightsCase()
     {
-        _db = db;
     }
     public Task<NutritionInsight> ExecuteAsync(string rawJson)
     {

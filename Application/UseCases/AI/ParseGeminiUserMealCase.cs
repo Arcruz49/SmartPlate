@@ -1,16 +1,13 @@
 using System.Text.Json;
 using SmartPlate.Application.Interfaces;
 using SmartPlate.Infrastructure.AI.Gemini;
-using SmartPlate.Infrastructure.Data;
 
 
 namespace SmartPlate.Application.UseCases;
 
 public class ParseGeminiUserMealCase : IParseGeminiUserMealCase{
-    private readonly Context _db;
-    public ParseGeminiUserMealCase(Context db)
+    public ParseGeminiUserMealCase()
     {
-        _db = db;
     }
     public Task<MealData> ExecuteAsync(string rawJson)
     {
