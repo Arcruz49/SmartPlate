@@ -21,6 +21,8 @@ public class ReadMealBarCodeCase : IReadMealBarCodeCase{
     {
         var openFoodResponseRawResponse = await _openFoodFactsClient.SendPromptAsync(request.Code);
 
+        return 
+
         
 
     }
