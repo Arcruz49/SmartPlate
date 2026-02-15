@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Expressions;
 using SmartPlate.Application.DTOs.Request;
 using SmartPlate.Application.DTOs.Responses;
 using SmartPlate.Application.Interfaces;
@@ -27,6 +28,7 @@ public class UserMealsRuleCreate : IUserMealsRuleCreate{
             Id = Guid.NewGuid(),
             UserId = userId,
             MealName = request.MealName,
+            MealDescription = request.MealDescription,
             MealDate = request.MealDate.Date,
             MealTime = request.MealDate.TimeOfDay,
             Calories = request.Calories,
