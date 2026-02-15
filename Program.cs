@@ -23,6 +23,15 @@ builder.Services.AddCors(options =>
     {
         policy
             .WithOrigins(
+                "https://localhost:5173",
+                "https://192.168.1.69:5173",
+                "https://100.94.132.33:5173",
+                "https://100.124.94.117:5173",
+                "https://192.168.12.122:5173",
+                "https://192.168.1.69",
+                "https://192.168.1.69:81",
+                "https://100.94.132.33",
+                "https://100.94.132.33:81",
                 "http://localhost:5173",
                 "http://192.168.1.69:5173",
                 "http://100.94.132.33:5173",

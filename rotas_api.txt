@@ -236,6 +236,19 @@ Response (200):
   "fat_g": "decimal"
 }
 
+GET /usermeals/usermeal-barcode
+Headers: Authorization: Bearer <token>
+Query Parameters: Code=<string>
+Response (200):
+{
+  "calories": decimal,
+  "protein_g": decimal,
+  "carbs_g": decimal,
+  "fat_g": decimal,
+  "description": "string",
+  "mealName": "string"
+}
+
 MÉTRICAS DO USUÁRIO (metrics)
 ------------------------------
 
