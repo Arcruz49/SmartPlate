@@ -12,8 +12,8 @@ namespace SmartPlate.Domain.ValueObjects
             if (string.IsNullOrWhiteSpace(password))
                 throw new ArgumentException("Senha é obrigatória.");
 
-            if(password.Length < 6)
-                throw new ArgumentException("A senha deve ter pelo menos 6 caractéres");
+            // if(password.Length < 6)
+            //     throw new ArgumentException("A senha deve ter pelo menos 6 caractéres");
 
             
             Value = password;
